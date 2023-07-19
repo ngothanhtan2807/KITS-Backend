@@ -20,11 +20,13 @@ public class ProductDto {
     private String name;
     private String description;
     private String detail;
+    private double price;
 
-    private int catalogID;
     private Set<MultipartFile> files = new HashSet<>();
     List<ImageProductDto> listImage = new ArrayList<>();
     List<Integer>sizesID = new ArrayList<>();
     List<Integer>colorsID = new ArrayList<>();
+    List<SizeDto>sizes = new ArrayList<>();
+    List<ColorDto>colors = new ArrayList<>();
 }
 
