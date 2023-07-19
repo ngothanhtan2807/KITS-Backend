@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/admin/")
+@RequestMapping("/api/admin")
 public class UserAdminController {
     @Autowired
     private UserService userService;
@@ -39,7 +39,7 @@ public class UserAdminController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserAdminController.class);
     //GET user get all
-    @GetMapping("users")
+    @GetMapping("/users")
     public ResponseEntity<PageDto<UserDto>> getAllUsers(
             @RequestParam(value = "pageNumber",required = false) Integer pageNumber,
             //pageNumber bắt đầu từ 0 trang 0 lấy bao nhiêu phần tử PageSize
@@ -53,9 +53,10 @@ public class UserAdminController {
         return new ResponseEntity<PageDto<UserDto>>(allPageUsers, HttpStatus.OK);
     }
 
-    @PostMapping("users")
+    @PostMapping("/users")
 
     public ResponseDTO< UserDto> add(@Valid @ModelAttribute UserDto u) throws IllegalStateException, IOException {
+
 
         Map r = this.cloudinary.uploader().upload(u.getFile().getBytes(), ObjectUtils.asMap("resource_type","auto"));
 
@@ -66,14 +67,16 @@ public class UserAdminController {
 
         userService.createUser(u);
         return ResponseDTO.<UserDto>builder().status(200).data(u).build();
+
+
     }
 
-    @GetMapping("users/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<UserDto> getUserBy(@PathVariable("userId") Integer uId) {
         return ResponseEntity.ok(this.userService.getUserById(uId));
     }
 
-    @DeleteMapping("users//{userId}")
+    @DeleteMapping("/users/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable("userId") Integer uId) {
         this.userService.deleteUser(uId);
         return new ResponseEntity(new ApiResponse("User deleted Successfully",true),HttpStatus.OK);
@@ -89,7 +92,7 @@ public class UserAdminController {
 //    }
 
     //PUT -update user
-    @PutMapping("/{userId}")
+    @PutMapping("/usersfile/{userId}")
     public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto,@PathVariable("userId") Integer uId) {
         UserDto updatedUser = this.userService.updateUser(userDto,uId);
         return ResponseEntity.ok(updatedUser);
