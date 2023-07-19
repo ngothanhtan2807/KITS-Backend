@@ -85,7 +85,6 @@ public class ProductServiceImpl implements ProductService {
             product.setSizes(lisSizes);
 
 
-
             List<Integer> colorID = productDto.getColorsID();
             Set<Color> lisColors = new HashSet<>();
             for (int i = 0; i < colorID.size(); i++) {
@@ -238,5 +237,15 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception e) {
             throw new RuntimeException("Error: " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<ProductDto> searchProductByName(String productName) {
+        List<ProductDto> productDtoList = new ArrayList<>();
+        List<Product> productList = productRepo.searchByName(productName);
+        for (Product product : productList){
+            productDtoList.add(this.convertToProductDto(product));
+        }
+        return productDtoList;
     }
 }

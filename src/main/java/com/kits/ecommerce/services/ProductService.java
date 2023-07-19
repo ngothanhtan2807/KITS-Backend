@@ -10,9 +10,15 @@ import java.util.List;
 
 public interface ProductService {
     ProductDto getProductById(Integer generalId);
+
     List<ProductDto> getAllProduct();
+
     ProductDto createProduct(ProductDto productDto) throws IOException;
+
     ProductDto updateProduct(ProductDto productDto, Integer generalId);
+
     void deleteProduct(Integer generalId);
-    Resource load (String name);
+
+    Resource load(String name);
+    List<ProductDto> searchProductByName(String productName);
 }

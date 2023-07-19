@@ -9,13 +9,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepo extends JpaRepository<Product,Integer> {
-//    List<Product> findByCatalog(Catalog catalog);
+public interface ProductRepo extends JpaRepository<Product, Integer> {
+    //    List<Product> findByCatalog(Catalog catalog);
 //
-//    @Query("select p from Product p where p.name like:key")
-//    List<Product> searchByName(@Param("key") String name);
+    @Query("select p from Product p where p.name like %:key% order by p.name")
+    List<Product> searchByName(@Param("key") String name);
 
 //    List<Product> findByName(String name); khong dung cau query khi search khong lay duoc het
+
+    List<Product> findByName(String name);
 
 
 }
