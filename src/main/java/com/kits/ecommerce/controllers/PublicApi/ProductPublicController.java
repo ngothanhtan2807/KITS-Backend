@@ -27,4 +27,18 @@ public class ProductPublicController {
     public ResponseEntity<?> searchProduct(@PathVariable("name") String name){
         return ResponseEntity.status(HttpStatus.OK).body(productService.searchProductByName(name));
     }
+
+    @GetMapping("/products")
+    public ResponseEntity<PageDto<ProductDto>> getAllProducts(
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_PRODUCTS_BY, required = false) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
+
+        PageDto<ProductDto> productResponse = productService.getProductsHomePage(pageNumber, pageSize, sortBy, sortOrder);
+
+        return new ResponseEntity<PageDto<ProductDto>>(productResponse, HttpStatus.FOUND);
+    }
+
+
 }
