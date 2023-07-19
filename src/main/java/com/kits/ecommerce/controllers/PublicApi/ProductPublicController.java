@@ -21,23 +21,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/public/")
 public class ProductPublicController {
-
-    @Autowired
-    private ProductService productService;
-
-    //get all products
-    @GetMapping("/products")
-    public ResponseEntity<PageDto<ProductDto>> getAllProducts(
-            @RequestParam(value = "pageNumber",required = false) Integer pageNumber,
-            //pageNumber bắt đầu từ 0 trang 0 lấy bao nhiêu phần tử PageSize
-            @RequestParam(value="pageSize",required = false) Integer pageSize,
-            @RequestParam(value="sortBy",defaultValue = AppConstants.SORT_PRODUCTS_BY,required = false) String sortBy,
-            @RequestParam(value="sortDir",defaultValue = AppConstants.SORT_DIR,required = false) String sortDir //tăng hay giảm
-    ) {
-        PageDto<ProductDto> allPageProducts = this.productService.getAllProducts(pageNumber,pageSize,sortBy,sortDir);
-        return new ResponseEntity<PageDto<ProductDto>>(allPageProducts, HttpStatus.OK);
-    }
-
+//
+//    @Autowired
+//    private ProductService productService;
+//
+//    //get all products
+//    @GetMapping("/products")
+//    public ResponseEntity<PageDto<ProductDto>> getAllProducts(
+//            @RequestParam(value = "pageNumber",required = false) Integer pageNumber,
+//            //pageNumber bắt đầu từ 0 trang 0 lấy bao nhiêu phần tử PageSize
+//            @RequestParam(value="pageSize",required = false) Integer pageSize,
+//            @RequestParam(value="sortBy",defaultValue = AppConstants.SORT_PRODUCTS_BY,required = false) String sortBy,
+//            @RequestParam(value="sortDir",defaultValue = AppConstants.SORT_DIR,required = false) String sortDir //tăng hay giảm
+//    ) {
+//        PageDto<ProductDto> allPageProducts = this.productService.getAllProducts(pageNumber,pageSize,sortBy,sortDir);
+//        return new ResponseEntity<PageDto<ProductDto>>(allPageProducts, HttpStatus.OK);
+//    }
+//
 
 //    //create
 //    @PostMapping("/products/catalog/{catalogId}")

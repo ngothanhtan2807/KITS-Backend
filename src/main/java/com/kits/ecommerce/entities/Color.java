@@ -13,12 +13,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Color extends  TimeAuditable{
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
-    @OneToMany(mappedBy = "color", cascade = CascadeType.ALL)
-    List<Product> productList = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "colors", cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
+
+    private List<Product> productList = new ArrayList<>();
 }

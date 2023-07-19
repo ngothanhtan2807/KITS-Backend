@@ -1,31 +1,66 @@
 package com.kits.ecommerce.controllers.AdminApi;
 
 
+import com.kits.ecommerce.dtos.ApiResponse;
 import com.kits.ecommerce.dtos.ProductDto;
+import com.kits.ecommerce.services.CatalogService;
 import com.kits.ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/product/")
+@RequestMapping("/api/admin/products")
+
 public class ProductAdminController {
 
+    @Autowired
+    CatalogService catalogService;
 
     @Autowired
     ProductService productService;
-    @GetMapping("/{generalID}")
-    public ResponseEntity<List<ProductDto>> getAll(@PathVariable("generalID")Integer id){
-//        if(page<1){
-//            return  new ResponseEntity(new ApiResponse("Page isnt exits", false), HttpStatus.OK);
-//        }else{
-//        Pageable pageable = PageRequest.of(page-1, 10);
-        return ResponseEntity.ok(productService.getAllProduct(id));
+
+    @GetMapping("/")
+    public ResponseEntity<List<ProductDto>> getAll(){
+        return ResponseEntity.ok(productService.getAllProduct());
     }
-    @PostMapping("/")
-    public ResponseEntity<ProductDto>createProduct(@PathVariable("generalID")Integer id, @RequestBody ProductDto productDto){
-        return ResponseEntity.ok(productService.createProduct(productDto, id));
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDto> getOne(@PathVariable("id")Integer id){
+        return  ResponseEntity.ok(productService.getProductById(id));
+    }
+    @PostMapping(value = "/")
+    public ResponseEntity<ProductDto>createGeneral(@ModelAttribute ProductDto productDto)throws IOException{
+//    return ResponseEntity.ok(generalProductService.createGeneral(generalProductDto));
+
+        return ResponseEntity.ok(productService.createProduct(productDto));
+    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ProductDto>updateGeneral(@ModelAttribute ProductDto productDto, @PathVariable("id")Integer id)throws IOException{
+        return  ResponseEntity.ok(productService.updateProduct(productDto, id));
+    }
+    @DeleteMapping ("/delete/{id}")
+    public ResponseEntity<?>deleteGeneral(@PathVariable("id")Integer id){
+        productService.deleteProduct(id);
+        return new ResponseEntity(new ApiResponse("General delete success!!!", true), HttpStatus.OK);
+    }
+
+    @GetMapping("/image/{filename}")
+    public ResponseEntity<byte[]> getImage(@PathVariable("filename") String filename) {
+        byte[] image = new byte[0];
+        try {
+            image = FileUtils.readFileToByteArray(new File("uploads/"+filename));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().contentType(MediaType.ALL).body(image);
     }
 }

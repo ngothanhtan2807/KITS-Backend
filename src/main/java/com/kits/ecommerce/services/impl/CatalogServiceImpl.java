@@ -30,26 +30,25 @@ public class CatalogServiceImpl implements CatalogService {
 
     @Override
     public CatalogDto updateCatalog(CatalogDto catalogDto, Integer catelogId) {
-        Catalog catalog = catalogRepo.findById(catelogId).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", catelogId));
+        Catalog catalog = catalogRepo.findById(catelogId).orElseThrow(()-> new ResoureNotFoundException("Catalog", "ID", catelogId));
         Catalog catalogNew = this.convertToCatalog(catalogDto);
         catalogNew.setCatalogId(catalog.getCatalogId());
         catalogRepo.save(catalogNew);
         return this.convertToCatalogDto(catalogNew);
     }
 
+    @Override
+    public CatalogDto getCatalogById(Integer catelogId) {
+        Catalog catalog = catalogRepo.findById(catelogId).orElseThrow(()->new ResoureNotFoundException("Catalog", "ID", catelogId));
 
-//    @Override
-//    public CatalogDto getCatalogById(Integer catelogId) {
-//        Catalog catalog = catalogRepo.findById(catelogId).orElseThrow(()->new ResoureNotFoundException("Catalog", "ID", catelogId));
-//
-//        return this.convertToCatalogDto(catalog);
-//    }
+        return this.convertToCatalogDto(catalog);
+    }
 
     @Override
     public List<CatalogDto> getAllCatalogs() {
         List<Catalog> catalogList = catalogRepo.findAll();
         List<CatalogDto> catalogDtos = new ArrayList<>();
-        for (int i = 0; i < catalogList.size(); i++) {
+        for (int i = 0; i< catalogList.size(); i++){
             catalogDtos.add(this.convertToCatalogDto(catalogList.get(i)));
         }
         return catalogDtos;
@@ -57,16 +56,14 @@ public class CatalogServiceImpl implements CatalogService {
 
     @Override
     public void deleteCatalog(Integer catelogId) {
-        Catalog catalog = catalogRepo.findById(catelogId).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", catelogId));
+        Catalog catalog = catalogRepo.findById(catelogId).orElseThrow(()->new ResoureNotFoundException("Catalog", "ID", catelogId));
         catalogRepo.deleteById(catalog.getCatalogId());
     }
-
-    public CatalogDto convertToCatalogDto(Catalog catalog) {
+    public CatalogDto convertToCatalogDto(Catalog catalog){
         return this.modelMapper.map(catalog, CatalogDto.class);
 
     }
-
-    public Catalog convertToCatalog(CatalogDto catalogDto) {
+    public Catalog convertToCatalog(CatalogDto catalogDto){
         return this.modelMapper.map(catalogDto, Catalog.class);
 
     }

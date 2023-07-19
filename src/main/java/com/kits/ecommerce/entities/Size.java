@@ -14,13 +14,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Size extends  TimeAuditable{
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
 
-    @OneToMany(mappedBy = "size", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "sizes", cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     private List<Product> productList = new ArrayList<>();
 }

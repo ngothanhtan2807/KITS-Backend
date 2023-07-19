@@ -8,14 +8,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import com.kits.ecommerce.entities.GeneralProduct;
-import com.kits.ecommerce.entities.TimeAuditable;
 
 @Entity
 @Table(name="catalogs")
@@ -30,7 +22,6 @@ public class Catalog extends TimeAuditable {
     private String catalogName;
 
     @OneToMany(mappedBy = "catalog",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private  List<GeneralProduct> generalProducts =new ArrayList<>();
-
+    private  List<Product> products =new ArrayList<>();
 
 }
