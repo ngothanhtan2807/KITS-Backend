@@ -69,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto createProduct(ProductDto productDto) {
 
         try {
-            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
+//            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
             Set<MultipartFile> files = productDto.getFiles();
 
             Product product = this.convertToProduct(productDto);
@@ -110,7 +110,7 @@ public class ProductServiceImpl implements ProductService {
 
                 product.addProductImages(imageProduct);
             }
-            product.setCatalog(catalog);
+//            product.setCatalog(catalog);
             productRepo.save(product);
 
             return this.convertToProductDto(product);
@@ -122,15 +122,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto updateProduct(ProductDto productDto, Integer generalId) {
+    public ProductDto updateProduct(ProductDto productDto, Integer productId) {
         try {
-            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
+//            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
+
+           //lấy ảnh của productDto
             Set<MultipartFile> files = productDto.getFiles();
-
-            Product product0 = productRepo.findById(generalId).orElseThrow(() -> new ResoureNotFoundException("General", "ID", generalId));
-
+//product gốc
+            Product product0 = productRepo.findById(productId).orElseThrow(() -> new ResoureNotFoundException("Product", "ID", productId));
+//ds ảnh của product gốc
             List<ImageProduct> imageProductList = product0.getListImage();
-
+//xóa ảnh trong db
             for (ImageProduct image : imageProductList) {
                 image.setProduct(null);
                 imageProductRepo.save(image);
@@ -143,6 +145,7 @@ public class ProductServiceImpl implements ProductService {
                 file.delete();
             }
             product0.clearProductImages();//remove old image
+            productRepo.save(product0);
 
             Product product = this.convertToProduct(productDto);
             product.setId(product0.getId());
@@ -161,7 +164,21 @@ public class ProductServiceImpl implements ProductService {
 
                 product.addProductImages(imageProduct);
             }
-            product.setCatalog(catalog);
+            Set<Color> colors = new HashSet<>();
+            List<Integer>colorID = productDto.getColorsID();
+            for (Integer i: colorID) {
+                colors.add(colorRepo.findById(i).orElseThrow(()->new ResoureNotFoundException("Color", "ID", i)));
+            }
+            product.setColors(colors);
+
+            List<Size>sizes = new ArrayList<>();
+            List<Integer>sizesID = productDto.getSizesID();
+            for(Integer i : sizesID){
+                sizes.add(sizeRepo.findById(i).orElseThrow(()-> new ResoureNotFoundException("Size", "ID", i)));
+            }
+            product.setSizes(sizes);
+//            product.setCatalog(catalog);
+
             productRepo.save(product);
 
             return this.convertToProductDto(product);
