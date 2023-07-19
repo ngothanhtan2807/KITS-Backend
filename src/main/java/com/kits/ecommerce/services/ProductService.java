@@ -21,4 +21,6 @@ public interface ProductService {
 
     Resource load(String name);
     List<ProductDto> searchProductByName(String productName);
+
+    PageDto<ProductDto> getProductsHomePage(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 }

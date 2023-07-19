@@ -71,4 +71,9 @@ public class ColorServiceImpl implements ColorService {
         Color color = this.modelMapper.map(colorDto, Color.class);
         return color;
     }
+
+    @Override
+    public void addColorsService(List<Color> colors) {
+        colorRepo.saveAll(colors);
+    }
 }

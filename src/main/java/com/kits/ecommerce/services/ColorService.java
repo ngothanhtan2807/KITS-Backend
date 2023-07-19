@@ -15,5 +15,7 @@ public interface ColorService {
     ColorDto convertToColorDto(Color color);
     Color convertToColor(ColorDto colorDto);
 
+    void addColorsService(List<Color> colors);
+
 }
 
