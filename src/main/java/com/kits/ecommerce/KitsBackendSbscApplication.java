@@ -86,13 +86,7 @@ public class KitsBackendSbscApplication implements CommandLineRunner{
 
             user.setRoles(Arrays.asList(adminRole));
 
-//            if (userRepo.existsByEmail(user.getEmail())) {
-//                throw new ConflictException("Email is already registered");
-//
-//            }
-
             userRepo.save(user);
-
 
         } catch (Exception e) {
             e.printStackTrace();

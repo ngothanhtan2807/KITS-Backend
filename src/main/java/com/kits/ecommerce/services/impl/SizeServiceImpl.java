@@ -67,6 +67,6 @@ public class SizeServiceImpl implements SizeService {
 
     @Override
     public Size convertToSize(SizeDto sizeDto) {
-         return this.modelMapper.map(sizeDto, Size.class);
+        return this.modelMapper.map(sizeDto, Size.class);
     }
 }

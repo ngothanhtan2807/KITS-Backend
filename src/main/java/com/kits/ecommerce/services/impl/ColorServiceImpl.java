@@ -14,7 +14,6 @@ import java.util.List;
 
 @Service
 public class ColorServiceImpl implements ColorService {
-
     @Autowired
     ColorRepo colorRepo;
 

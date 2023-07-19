@@ -10,9 +10,8 @@ import javax.persistence.*;
 
 
 @Entity
-
+@Table(name = "images")
 @Data
-@Table(name = "image")
 @NoArgsConstructor
 @AllArgsConstructor
 public class ImageProduct extends  TimeAuditable{
@@ -24,11 +23,8 @@ public class ImageProduct extends  TimeAuditable{
     private  String title;
 
     private  String path;
-
-    @ManyToOne(fetch = FetchType.EAGER)//should use LAZY
-//    @JsonBackReference
-    @JoinColumn(name = "general_id")
-    private  GeneralProduct generalProduct;
-
-
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id") // tên field khoá ngoại
+    private Product product;
 }
