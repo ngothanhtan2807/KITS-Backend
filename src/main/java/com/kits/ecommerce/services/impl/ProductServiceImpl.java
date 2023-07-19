@@ -69,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto createProduct(ProductDto productDto) {
 
         try {
-            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
+//            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
             Set<MultipartFile> files = productDto.getFiles();
 
             Product product = this.convertToProduct(productDto);
@@ -110,7 +110,7 @@ public class ProductServiceImpl implements ProductService {
 
                 product.addProductImages(imageProduct);
             }
-            product.setCatalog(catalog);
+//            product.setCatalog(catalog);
             productRepo.save(product);
 
             return this.convertToProductDto(product);
@@ -124,7 +124,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto updateProduct(ProductDto productDto, Integer productId) {
         try {
-            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
+//            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
 
            //lấy ảnh của productDto
             Set<MultipartFile> files = productDto.getFiles();
@@ -145,6 +145,7 @@ public class ProductServiceImpl implements ProductService {
                 file.delete();
             }
             product0.clearProductImages();//remove old image
+            productRepo.save(product0);
 
             Product product = this.convertToProduct(productDto);
             product.setId(product0.getId());
@@ -176,7 +177,7 @@ public class ProductServiceImpl implements ProductService {
                 sizes.add(sizeRepo.findById(i).orElseThrow(()-> new ResoureNotFoundException("Size", "ID", i)));
             }
             product.setSizes(sizes);
-            product.setCatalog(catalog);
+//            product.setCatalog(catalog);
 
             productRepo.save(product);
 

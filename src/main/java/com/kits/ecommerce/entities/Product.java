@@ -31,16 +31,16 @@ public class Product extends TimeAuditable {
             /*, fetch = FetchType.EAGER, orphanRemoval = true*/)
     private List<ImageProduct> listImage;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 
-    @JoinColumn(name="catalog_id")
-    private Catalog catalog;
+//    @JoinColumn(name="catalog_id")
+//    private Catalog catalog;
     //
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "product_size", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "size_id"))
     private List<Size> sizes;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "product_color", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "color_id"))
     private Set<Color> colors;
 

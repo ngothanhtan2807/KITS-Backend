@@ -61,6 +61,6 @@ public class ProductAdminController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok().contentType(MediaType.ALL).body(image);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(image);
     }
 }

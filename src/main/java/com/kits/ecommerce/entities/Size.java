@@ -1,5 +1,7 @@
 package com.kits.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +22,7 @@ public class Size extends  TimeAuditable{
 
     private String name;
 
-    @ManyToMany(mappedBy = "sizes", cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "sizes", cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Product> productList = new ArrayList<>();
 }
