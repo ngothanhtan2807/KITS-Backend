@@ -25,7 +25,7 @@ public class Product extends TimeAuditable {
     private String name;
     private String description;
     private String detail;
-
+    private double price;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product"/* tên property product trong class ProductImages */
             /*, fetch = FetchType.EAGER, orphanRemoval = true*/)
