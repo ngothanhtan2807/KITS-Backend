@@ -1,11 +1,9 @@
 package com.kits.ecommerce;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
+
 import com.kits.ecommerce.config.AppConstants;
 import com.kits.ecommerce.entities.Role;
 import com.kits.ecommerce.entities.User;
-import com.kits.ecommerce.exeptions.ConflictException;
 import com.kits.ecommerce.repositories.RoleRepo;
 import com.kits.ecommerce.repositories.UserRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -45,17 +43,7 @@ public class KitsBackendSbscApplication implements CommandLineRunner{
         return new ModelMapper();
     }
 
-    @Bean
-    public Cloudinary cloudinary() {
 
-        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", "dinaczft5",
-                "api_key", "988819678585623",
-                "api_secret", "7pNZeNLXjW6eMw_j6s0Mz1wUIiE",
-                "secure",true
-                ));
-        return cloudinary;
-    }
 
     @Override
     public void run(String... args) throws Exception {
