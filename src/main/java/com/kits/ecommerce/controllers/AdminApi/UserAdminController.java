@@ -9,6 +9,7 @@ import com.kits.ecommerce.dtos.PageDto;
 import com.kits.ecommerce.dtos.ResponseDTO;
 import com.kits.ecommerce.dtos.UserDto;
 import com.kits.ecommerce.entities.User;
+import com.kits.ecommerce.services.FileUploadCloudinary;
 import com.kits.ecommerce.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,9 +34,11 @@ public class UserAdminController {
 
 //    @Value("${user.image.path}")
 //    private  String UPLOAD_FOLDER;
+    @Autowired
+    Cloudinary cloudinary;
 
     @Autowired
-    private Cloudinary cloudinary;
+    private FileUploadCloudinary fileUploadCloudinary ;
 
     private static final Logger logger = LoggerFactory.getLogger(UserAdminController.class);
     //GET user get all
@@ -57,13 +60,9 @@ public class UserAdminController {
 
     public ResponseDTO< UserDto> add(@Valid @ModelAttribute UserDto u) throws IllegalStateException, IOException {
 
+        String imageURL = fileUploadCloudinary.uploadFile(u.getFile());
 
-        Map r = this.cloudinary.uploader().upload(u.getFile().getBytes(), ObjectUtils.asMap("resource_type","auto"));
-
-
-        String img = (String) r.get("secure_url");
-
-        u.setAvatar(img);
+        u.setAvatar(imageURL);
 
         userService.createUser(u);
         return ResponseDTO.<UserDto>builder().status(200).data(u).build();
@@ -77,7 +76,16 @@ public class UserAdminController {
     }
 
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable("userId") Integer uId) {
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") Integer uId) throws IOException {
+
+        UserDto userDto = this.userService.getUserById(uId);
+        String pathImage =  userDto.getAvatar();
+        if(!pathImage.equals("default.png")){
+            this.fileUploadCloudinary.deleteImage(pathImage);
+        }
+
+
+
         this.userService.deleteUser(uId);
         return new ResponseEntity(new ApiResponse("User deleted Successfully",true),HttpStatus.OK);
     }
@@ -92,8 +100,8 @@ public class UserAdminController {
 //    }
 
     //PUT -update user
-    @PutMapping("/usersfile/{userId}")
-    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto,@PathVariable("userId") Integer uId) {
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto,@PathVariable("userId") Integer uId) {
         UserDto updatedUser = this.userService.updateUser(userDto,uId);
         return ResponseEntity.ok(updatedUser);
     }
