@@ -2,6 +2,7 @@ package com.kits.ecommerce.services;
 
 import com.kits.ecommerce.dtos.PageDto;
 import com.kits.ecommerce.dtos.ProductDto;
+import com.kits.ecommerce.dtos.SearchDto;
 import com.kits.ecommerce.entities.Product;
 import org.springframework.core.io.Resource;
 
@@ -23,4 +24,6 @@ public interface ProductService {
     List<ProductDto> searchProductByName(String productName);
 
     PageDto<ProductDto> getProductsHomePage(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+
+    List<ProductDto>search(SearchDto searchDto);
 }

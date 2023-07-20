@@ -2,6 +2,7 @@ package com.kits.ecommerce.services.impl;
 
 import com.kits.ecommerce.dtos.PageDto;
 import com.kits.ecommerce.dtos.ProductDto;
+import com.kits.ecommerce.dtos.SearchDto;
 import com.kits.ecommerce.entities.*;
 import com.kits.ecommerce.exeptions.ResoureNotFoundException;
 import com.kits.ecommerce.repositories.*;
@@ -18,6 +19,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,6 +51,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     SizeRepo sizeRepo;
 
+    @PersistenceContext
+    EntityManager entityManager;
+
     @Override
     public ProductDto getProductById(Integer productId) {
         Product product = productRepo.findById(productId).orElseThrow(() -> new ResoureNotFoundException("Product", "ID", productId));
@@ -69,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto createProduct(ProductDto productDto) {
 
         try {
-//            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
+            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
             Set<MultipartFile> files = productDto.getFiles();
 
             Product product = this.convertToProduct(productDto);
@@ -110,7 +117,7 @@ public class ProductServiceImpl implements ProductService {
 
                 product.addProductImages(imageProduct);
             }
-//            product.setCatalog(catalog);
+            product.setCatalog(catalog);
             productRepo.save(product);
 
             return this.convertToProductDto(product);
@@ -124,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto updateProduct(ProductDto productDto, Integer productId) {
         try {
-//            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
+            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
 
            //lấy ảnh của productDto
             Set<MultipartFile> files = productDto.getFiles();
@@ -177,7 +184,7 @@ public class ProductServiceImpl implements ProductService {
                 sizes.add(sizeRepo.findById(i).orElseThrow(()-> new ResoureNotFoundException("Size", "ID", i)));
             }
             product.setSizes(sizes);
-//            product.setCatalog(catalog);
+            product.setCatalog(catalog);
 
             productRepo.save(product);
 
@@ -192,11 +199,7 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(Integer generalId) {
         Product product = productRepo.findById(generalId).orElseThrow(() -> new ResoureNotFoundException("General Product", "ID", generalId));
         List<ImageProduct> imageProductList = product.getListImage();
-//        for (int i = 0; i < imageProductList.size(); i++) {
-//            File file = new File(root + "/" + imageProductList.get(i).getPath());
-//
-//            file.delete();
-//        }
+
         for (ImageProduct image : imageProductList) {
             File file = new File(root + "/" + image.getPath());
             file.delete();
@@ -206,30 +209,13 @@ public class ProductServiceImpl implements ProductService {
 
     public Product convertToProduct(ProductDto productDto) {
         Product product = this.modelMapper.map(productDto, Product.class);
-//        List<Integer> sizesID = productDto.getSizesID();
-////        Set<Integer> colorID = productDto.getColorsID();
-//        Set<Size>lisSizes = new HashSet<>();
-//        for (int i = 0; i < sizesID.size(); i++) {
-//            int finalI = i;
-//          Size size =  sizeRepo.findById(sizesID.get(i)).orElseThrow(()-> new ResoureNotFoundException("Size", "ID", sizesID.get(finalI)));
-//        lisSizes.add(size);
-//        }
-//        product.setSizes(lisSizes);
-////        for (Integer i :sizesID) {
-////            product.getSizes().add(sizeRepo.findById(i).orElseThrow(()-> new ResoureNotFoundException("Size", "ID", i)));
-////        }
-////        for (Integer i :colorID) {
-////            product.getColors().add(colorRepo.findById(i).orElseThrow(()-> new ResoureNotFoundException("Color", "ID", i)));
-////        }
+
         return product;
     }
 
     public ProductDto convertToProductDto(Product product) {
         ProductDto productDto = this.modelMapper.map(product, ProductDto.class);
-//        Set<Color> listColor = product.getColors();
-//        for (Color color : listColor) {
-//            productDto.getColorsID().add(color.getId());
-//        }
+
         List<Size> listSize = product.getSizes();
         for (Size size : listSize) {
             productDto.getSizesID().add(size.getId());
@@ -290,5 +276,33 @@ public class ProductServiceImpl implements ProductService {
         productResponse.setLastPage(pageProducts.isLast());
 
         return productResponse;
+    }
+    @Override
+    public List<ProductDto>search(SearchDto searchDto){
+        List<ProductDto> productDtoList = new ArrayList<>();
+
+        String sql = "select p from Product p where 1=1 ";
+        if(searchDto.getSize()!= null){
+            sql += "and p.sizes = '"+ searchDto.getSize()+"'";
+        }
+        if(searchDto.getColor() != null){
+            sql += "and p.colors = '"+ searchDto.getColor()+"'";
+        }
+        if(searchDto.getCatalogID() != null){
+            sql += "and p.catalog = '"+ searchDto.getCatalogID()+"'";
+        }
+        if(searchDto.getName()!= null){
+            sql += "and p.name = '"+ searchDto.getName()+"'";
+        }
+        if(searchDto.getStartPrice() >= 0 && searchDto.getEndPrice() >=0){
+            sql += "and p.price > "+ searchDto.getStartPrice() + " and p.price <= " + searchDto.getEndPrice();
+        }
+        Query query = entityManager.createNativeQuery(sql, Product.class);
+        List<Product>products = query.getResultList();
+
+        for (Product p : products) {
+            productDtoList.add(this.convertToProductDto(p));
+        }
+        return  productDtoList;
     }
 }
