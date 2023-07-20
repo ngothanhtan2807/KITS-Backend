@@ -47,4 +47,10 @@ public class ColorAdminController {
         // Trả về thông báo thành công nếu thêm thành công
         return new ResponseEntity(new ApiResponse("Add all success!!!", true), HttpStatus.OK);
     }
+
+    @DeleteMapping("/deleteColors")
+    public ResponseEntity<?> deleteColors(@RequestBody List<Integer> colorIds) {
+        colorService.deleteColorsService(colorIds);
+        return new ResponseEntity(new ApiResponse("Delete all success!!!", true), HttpStatus.OK);
+    }
 }
