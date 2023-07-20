@@ -17,5 +17,7 @@ public interface ColorService {
 
     void addColorsService(List<Color> colors);
 
+    void deleteColorsService(List<Integer> ids);
+
 }
 

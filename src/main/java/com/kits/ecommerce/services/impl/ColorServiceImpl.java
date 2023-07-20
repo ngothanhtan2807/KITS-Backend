@@ -76,4 +76,10 @@ public class ColorServiceImpl implements ColorService {
     public void addColorsService(List<Color> colors) {
         colorRepo.saveAll(colors);
     }
+
+    @Override
+    public void deleteColorsService(List<Integer> ids) {
+        colorRepo.deleteAllById(ids);
+
+    }
 }
