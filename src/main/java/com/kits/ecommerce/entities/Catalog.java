@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name="catalogs")
+@Table(name="catalog")
 @NoArgsConstructor
 @Data
 public class Catalog extends TimeAuditable {

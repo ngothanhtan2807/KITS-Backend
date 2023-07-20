@@ -13,7 +13,7 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "products")
+@Table(name = "product")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

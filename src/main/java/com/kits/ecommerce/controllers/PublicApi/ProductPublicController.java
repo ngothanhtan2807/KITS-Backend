@@ -40,8 +40,8 @@ public class ProductPublicController {
 
         return new ResponseEntity<PageDto<ProductDto>>(productResponse, HttpStatus.FOUND);
     }
-    @GetMapping("/")
-    public ResponseEntity<List<ProductDto>>search(@RequestBody SearchDto searchDto){
+    @PostMapping("/")
+    public ResponseEntity<List<ProductDto>>search(@ModelAttribute SearchDto searchDto){
         return ResponseEntity.ok(productService.search(searchDto));
     }
 
