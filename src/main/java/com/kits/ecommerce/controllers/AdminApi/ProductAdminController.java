@@ -63,4 +63,5 @@ public class ProductAdminController {
         }
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(image);
     }
+
 }

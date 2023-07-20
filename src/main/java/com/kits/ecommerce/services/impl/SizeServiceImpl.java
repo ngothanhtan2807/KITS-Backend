@@ -29,7 +29,7 @@ public class SizeServiceImpl implements SizeService {
 
     @Override
     public SizeDto updateSize(SizeDto sizeDto, Integer sizeId) {
-        Size size = sizeRepo.findById(sizeId).orElseThrow(()->new ResoureNotFoundException("Size", "ID", sizeId));
+        Size size = sizeRepo.findById(sizeId).orElseThrow(() -> new ResoureNotFoundException("Size", "ID", sizeId));
         Size size1 = this.convertToSize(sizeDto);
         size1.setId(size.getId());
         sizeRepo.save(size1);
@@ -38,7 +38,7 @@ public class SizeServiceImpl implements SizeService {
 
     @Override
     public SizeDto getSizeById(Integer sizeId) {
-        Size size = sizeRepo.findById(sizeId).orElseThrow(()->new ResoureNotFoundException("Size", "ID", sizeId));
+        Size size = sizeRepo.findById(sizeId).orElseThrow(() -> new ResoureNotFoundException("Size", "ID", sizeId));
 
         return this.convertToSizeDto(size);
     }
@@ -46,7 +46,7 @@ public class SizeServiceImpl implements SizeService {
     @Override
     public List<SizeDto> getAllSize() {
         List<Size> sizes = sizeRepo.findAll();
-        List<SizeDto>sizeDtoList = new ArrayList<>();
+        List<SizeDto> sizeDtoList = new ArrayList<>();
 
         for (int i = 0; i < sizes.size(); i++) {
             sizeDtoList.add(this.convertToSizeDto(sizes.get(i)));
@@ -56,7 +56,7 @@ public class SizeServiceImpl implements SizeService {
 
     @Override
     public void deleteSize(Integer sizeId) {
-        Size size = sizeRepo.findById(sizeId).orElseThrow(()->new ResoureNotFoundException("Size", "ID", sizeId));
+        Size size = sizeRepo.findById(sizeId).orElseThrow(() -> new ResoureNotFoundException("Size", "ID", sizeId));
         sizeRepo.deleteById(size.getId());
     }
 
@@ -68,5 +68,15 @@ public class SizeServiceImpl implements SizeService {
     @Override
     public Size convertToSize(SizeDto sizeDto) {
         return this.modelMapper.map(sizeDto, Size.class);
+    }
+
+    @Override
+    public void addSizesService(List<Size> sizes) {
+        sizeRepo.saveAll(sizes);
+    }
+
+    @Override
+    public void deleteSizesService(List<Integer> ids) {
+        sizeRepo.deleteAllById(ids);
     }
 }

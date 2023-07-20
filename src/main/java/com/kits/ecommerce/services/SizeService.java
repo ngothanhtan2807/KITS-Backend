@@ -2,6 +2,7 @@ package com.kits.ecommerce.services;
 
 import com.kits.ecommerce.dtos.ColorDto;
 import com.kits.ecommerce.dtos.SizeDto;
+import com.kits.ecommerce.entities.Catalog;
 import com.kits.ecommerce.entities.Size;
 
 import java.util.List;
@@ -14,4 +15,8 @@ public interface SizeService {
     void deleteSize(Integer sizeId);
     SizeDto convertToSizeDto(Size size);
     Size convertToSize(SizeDto sizeDto);
+    void addSizesService(List<Size> sizes);
+
+    void deleteSizesService(List<Integer> ids);
+
 }
