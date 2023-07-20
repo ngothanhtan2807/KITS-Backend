@@ -1,6 +1,7 @@
 package com.kits.ecommerce.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +22,7 @@ public class Catalog extends TimeAuditable {
     @Column(name="name",length = 100,nullable = false)
     private String catalogName;
 
-//    @OneToMany(mappedBy = "catalog",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-//    private  List<Product> products =new ArrayList<>();
-
+    @OneToMany(mappedBy = "catalog",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private  List<Product> products =new ArrayList<>();
 }

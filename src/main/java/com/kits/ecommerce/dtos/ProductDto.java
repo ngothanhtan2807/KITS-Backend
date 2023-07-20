@@ -21,7 +21,8 @@ public class ProductDto {
     private String description;
     private String detail;
     private double price;
-
+    private int catalogID;
+    private  CatalogDto catalog;
     private Set<MultipartFile> files = new HashSet<>();
     List<ImageProductDto> listImage = new ArrayList<>();
     List<Integer>sizesID = new ArrayList<>();

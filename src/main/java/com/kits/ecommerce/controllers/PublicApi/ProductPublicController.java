@@ -4,6 +4,7 @@ import com.kits.ecommerce.config.AppConstants;
 import com.kits.ecommerce.dtos.ApiResponse;
 import com.kits.ecommerce.dtos.PageDto;
 import com.kits.ecommerce.dtos.ProductDto;
+import com.kits.ecommerce.dtos.SearchDto;
 import com.kits.ecommerce.services.ProductService;
 import org.hibernate.engine.jdbc.StreamUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class ProductPublicController {
 
         return new ResponseEntity<PageDto<ProductDto>>(productResponse, HttpStatus.FOUND);
     }
-
+    @GetMapping("/")
+    public ResponseEntity<List<ProductDto>>search(@RequestBody SearchDto searchDto){
+        return ResponseEntity.ok(productService.search(searchDto));
+    }
 
 }
