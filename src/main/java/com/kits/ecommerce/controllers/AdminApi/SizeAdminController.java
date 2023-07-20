@@ -2,6 +2,8 @@ package com.kits.ecommerce.controllers.AdminApi;
 
 import com.kits.ecommerce.dtos.ApiResponse;
 import com.kits.ecommerce.dtos.SizeDto;
+import com.kits.ecommerce.entities.Color;
+import com.kits.ecommerce.entities.Size;
 import com.kits.ecommerce.services.SizeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,5 +38,19 @@ public class SizeAdminController {
     public ResponseEntity<?> deleteColor(@PathVariable("id")Integer id){
         sizeService.deleteSize(id);
         return new ResponseEntity(new ApiResponse("Delete success!!!", true), HttpStatus.OK);
+    }
+    @PostMapping("/addSizes")
+    public ResponseEntity<?>  addSizes(@RequestBody List<Size> sizes) {
+
+        // TODO: Xử lý logic để thêm nhiều màu sắc vào trong cơ sở dữ liệu
+        sizeService.addSizesService(sizes);
+        // Trả về thông báo thành công nếu thêm thành công
+        return new ResponseEntity(new ApiResponse("Add all success!!!", true), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteSizes")
+    public ResponseEntity<?> deleteSizes(@RequestBody List<Integer> sizeIds) {
+        sizeService.deleteSizesService(sizeIds);
+        return new ResponseEntity(new ApiResponse("Delete all success!!!", true), HttpStatus.OK);
     }
 }

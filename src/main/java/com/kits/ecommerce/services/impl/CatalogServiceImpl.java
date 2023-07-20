@@ -2,6 +2,7 @@ package com.kits.ecommerce.services.impl;
 
 import com.kits.ecommerce.dtos.CatalogDto;
 import com.kits.ecommerce.entities.Catalog;
+import com.kits.ecommerce.entities.Color;
 import com.kits.ecommerce.exeptions.ResoureNotFoundException;
 import com.kits.ecommerce.repositories.CatalogRepo;
 import com.kits.ecommerce.services.CatalogService;
@@ -59,6 +60,17 @@ public class CatalogServiceImpl implements CatalogService {
         Catalog catalog = catalogRepo.findById(catelogId).orElseThrow(()->new ResoureNotFoundException("Catalog", "ID", catelogId));
         catalogRepo.deleteById(catalog.getCatalogId());
     }
+
+    @Override
+    public void addCatalogsService(List<Catalog> catalogs) {
+        catalogRepo.saveAll(catalogs);
+    }
+
+    @Override
+    public void deleteCatalogsService(List<Integer> ids) {
+            catalogRepo.deleteAllById(ids);
+    }
+
     public CatalogDto convertToCatalogDto(Catalog catalog){
         return this.modelMapper.map(catalog, CatalogDto.class);
 
@@ -67,4 +79,5 @@ public class CatalogServiceImpl implements CatalogService {
         return this.modelMapper.map(catalogDto, Catalog.class);
 
     }
+
 }
