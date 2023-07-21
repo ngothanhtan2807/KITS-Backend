@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchDto {
-    private String name;
-    private String color;
-    private String size;
+//    private String name;
+    private Integer color;
+    private Integer size;
     private Integer catalogID;
     private double startPrice;
-    private double endPrice;
+    private Double endPrice;
 }

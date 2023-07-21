@@ -133,7 +133,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
 
-           //lấy ảnh của productDto
+            //lấy ảnh của productDto
             Set<MultipartFile> files = productDto.getFiles();
 //product gốc
             Product product0 = productRepo.findById(productId).orElseThrow(() -> new ResoureNotFoundException("Product", "ID", productId));
@@ -172,16 +172,16 @@ public class ProductServiceImpl implements ProductService {
                 product.addProductImages(imageProduct);
             }
             Set<Color> colors = new HashSet<>();
-            List<Integer>colorID = productDto.getColorsID();
-            for (Integer i: colorID) {
-                colors.add(colorRepo.findById(i).orElseThrow(()->new ResoureNotFoundException("Color", "ID", i)));
+            List<Integer> colorID = productDto.getColorsID();
+            for (Integer i : colorID) {
+                colors.add(colorRepo.findById(i).orElseThrow(() -> new ResoureNotFoundException("Color", "ID", i)));
             }
             product.setColors(colors);
 
-            List<Size>sizes = new ArrayList<>();
-            List<Integer>sizesID = productDto.getSizesID();
-            for(Integer i : sizesID){
-                sizes.add(sizeRepo.findById(i).orElseThrow(()-> new ResoureNotFoundException("Size", "ID", i)));
+            List<Size> sizes = new ArrayList<>();
+            List<Integer> sizesID = productDto.getSizesID();
+            for (Integer i : sizesID) {
+                sizes.add(sizeRepo.findById(i).orElseThrow(() -> new ResoureNotFoundException("Size", "ID", i)));
             }
             product.setSizes(sizes);
             product.setCatalog(catalog);
@@ -246,7 +246,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDto> searchProductByName(String productName) {
         List<ProductDto> productDtoList = new ArrayList<>();
         List<Product> productList = productRepo.searchByName(productName);
-        for (Product product : productList){
+        for (Product product : productList) {
             productDtoList.add(this.convertToProductDto(product));
         }
         return productDtoList;
@@ -266,7 +266,7 @@ public class ProductServiceImpl implements ProductService {
         List<ProductDto> productDTOs = products.stream().map(product -> modelMapper.map(product, ProductDto.class))
                 .collect(Collectors.toList());
 
-       PageDto<ProductDto>  productResponse = new PageDto<>();
+        PageDto<ProductDto> productResponse = new PageDto<>();
 
         productResponse.setContents(productDTOs);
         productResponse.setPageNumber(pageProducts.getNumber());
@@ -277,32 +277,15 @@ public class ProductServiceImpl implements ProductService {
 
         return productResponse;
     }
+
     @Override
-    public List<ProductDto>search(SearchDto searchDto){
-        List<ProductDto> productDtoList = new ArrayList<>();
+    public List<ProductDto> search(SearchDto searchDto) {
 
-        String sql = "select p from Product p where 1=1 ";
-        if(searchDto.getSize()!= null){
-            sql += "and p.sizes = '"+ searchDto.getSize()+"'";
-        }
-        if(searchDto.getColor() != null){
-            sql += "and p.colors = '"+ searchDto.getColor()+"'";
-        }
-        if(searchDto.getCatalogID() != null){
-            sql += "and p.catalog = '"+ searchDto.getCatalogID()+"'";
-        }
-        if(searchDto.getName()!= null){
-            sql += "and p.name = '"+ searchDto.getName()+"'";
-        }
-        if(searchDto.getStartPrice() >= 0 && searchDto.getEndPrice() >=0){
-            sql += "and p.price > "+ searchDto.getStartPrice() + " and p.price <= " + searchDto.getEndPrice();
-        }
-        Query query = entityManager.createNativeQuery(sql, Product.class);
-        List<Product>products = query.getResultList();
-
+        List<Product> products = productRepo.findProductsBySizeColorAndCatalog(searchDto.getSize(), searchDto.getCatalogID(), searchDto.getColor(), searchDto.getStartPrice(), searchDto.getEndPrice());
+        List<ProductDto> productDtos = new ArrayList<>();
         for (Product p : products) {
-            productDtoList.add(this.convertToProductDto(p));
+            productDtos.add(this.convertToProductDto(p));
         }
-        return  productDtoList;
+        return productDtos;
     }
 }
