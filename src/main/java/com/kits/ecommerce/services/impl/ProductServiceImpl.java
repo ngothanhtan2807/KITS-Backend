@@ -280,47 +280,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> search(SearchDto searchDto) {
-        List<ProductDto> productDtoList = new ArrayList<>();
-//        SELECT p FROM Product p JOIN p.sizes s JOIN p.colors c WHERE s.name = :sizeName AND c.name = :colorName AND p.catalog.id = :catalogId"
-//        String sql = "select p from Product p JOIN p.sizes s JOIN p.colors c where 1=1 ";
-//        if(searchDto.getSize()!= null){
-//            sql += " and s.id = "+ searchDto.getSize()+" ";
-//        }
-//        if(searchDto.getColor() != null){
-//            sql += "and c.id = "+ searchDto.getColor()+" ";
-//        }
-//        if(searchDto.getCatalogID() != null){
-//            sql += "and p.catalog.id ="+ searchDto.getCatalogID()+" ";
-//        }
-//        if(searchDto.getName()!= null){
-//            sql += "and p.name like '%"+ searchDto.getName()+"%' ";
-//        }
-//        if(searchDto.getStartPrice() >= 0 && searchDto.getEndPrice() >=0){
-//            sql += "and p.price > "+ searchDto.getStartPrice() + " and p.price <= " + searchDto.getEndPrice();
-//        }
-//        Query query = entityManager.createNativeQuery(sql, Product.class);
-//        List products = query.getResultList();
-//
-//        for (Object p : products) {
-//            productDtoList.add(this.convertToProductDto((Product) p));
-//        }
-//        String sql = "SELECT p FROM Product p JOIN p.sizes s JOIN p.colors c JOIN p.catalog ct WHERE s.id = :sizeID AND ct.catalogId = :catalogID AND c.id = :colorID";
-        String sql = "SELECT p FROM Product p JOIN p.sizes s JOIN p.colors c JOIN p.catalog ct WHERE 1=1 ";
-        if (searchDto.getSize() != null) {
-            sql += "and (:sizeID is null or s.id = :sizeID)";
-        }
-        if (searchDto.getCatalogID() != null){
-            sql += " AND (:catalogID is null or ct.catalogId = :catalogID)";
-        }
-        if (searchDto.getColor() != null){
-            sql += " AND (:colorID is null or c.id = :colorID)";
-        }
-        if (searchDto.getStartPrice()>= 0){
-            sql += " AND (:startPrice is null or p.price >= :startPrice)";
-        }
-        if (searchDto.getEndPrice() != null){
-            sql += " AND (:endPrice is null or p.price <= :endPrice)";
-        }
 
         List<Product> products = productRepo.findProductsBySizeColorAndCatalog(searchDto.getSize(), searchDto.getCatalogID(), searchDto.getColor(), searchDto.getStartPrice(), searchDto.getEndPrice());
         List<ProductDto> productDtos = new ArrayList<>();
