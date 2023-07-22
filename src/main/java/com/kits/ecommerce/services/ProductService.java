@@ -26,4 +26,8 @@ public interface ProductService {
     PageDto<ProductDto> getProductsHomePage(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
     List<ProductDto>search(SearchDto searchDto);
+
+    List<ProductDto>filterByLength(int id);
+
+    List<ProductDto>filterByCatalog(int id);
 }

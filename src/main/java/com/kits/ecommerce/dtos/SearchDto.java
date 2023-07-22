@@ -12,6 +12,7 @@ public class SearchDto {
     private Integer color;
     private Integer size;
     private Integer catalogID;
+    private Integer lengthID;
     private double startPrice;
     private Double endPrice;
 }
