@@ -48,94 +48,13 @@ public class ProductPublicController {
     public ResponseEntity<List<ProductDto>> search(@ModelAttribute SearchDto searchDto) {
         return ResponseEntity.ok(productService.search(searchDto));
     }
+     @GetMapping("/filter-by-length/{id}")
+    public ResponseEntity<List<ProductDto>>filterByLength(@PathVariable("id")int id){
+        return ResponseEntity.ok(productService.filterByLength(id));
+     }
 
-    @GetMapping("/cart")
-
-    public ResponseEntity<Cart> getCart(final ModelMap model,
-                                        final HttpServletRequest request, final HttpServletResponse response) {
-
-        HttpSession httpSession = request.getSession();
-        Cart cart = null;
-
-        if (httpSession.getAttribute("cart") != null) {
-            cart = (Cart) httpSession.getAttribute("cart");
-        } else {
-            cart = new Cart();
-            httpSession.setAttribute("cart", cart);
-        }
-
-        return ResponseEntity.ok(cart);
-    }
-
-    @PostMapping("/cart")
-    public ResponseEntity<Cart> addToCart(final ModelMap model, @RequestBody CartItem cartItem,
-                                          final HttpServletRequest request, final HttpServletResponse response) {
-        HttpSession httpSession = request.getSession();
-        Cart cart = null;
-
-        if (httpSession.getAttribute("cart") != null) {
-            cart = (Cart) httpSession.getAttribute("cart");
-        } else {
-            cart = new Cart();
-            httpSession.setAttribute("cart", cart);
-        }
-        List<CartItem> itemList = cart.getItemList();
-        int count = 0;
-        for (CartItem item : itemList) {
-            if (item.getProductID() == cartItem.getProductID()) {
-                item.setQuantity(item.getQuantity() + cartItem.getQuantity());
-            } else {
-                count++;
-            }
-        }
-        if (count == itemList.size()) {
-            itemList.add(cartItem);
-        }
-        for (CartItem item :itemList) {
-            item.setTotalPrice(item.getPrice()*item.getQuantity());
-        }
-        cart.setItemList(itemList);
-
-        httpSession.setAttribute("cart", cart);
-        return ResponseEntity.ok(cart);
-    }
-    @DeleteMapping("/cart/delete/{id}")
-    public ResponseEntity<?>deleteCartItem(@PathVariable("id")int id,
-                                           final HttpServletRequest request, final HttpServletResponse response){
-
-        Cart cart = (Cart) request.getSession().getAttribute("cart");
-        List<CartItem>itemList = cart.getItemList();
-        int size = itemList.size();
-        for (int i = 0; i < size; i++) {
-            if(itemList.get(i).getProductID() == id){
-                itemList.remove(i);
-            }
-        }
-        cart.setItemList(itemList);
-        request.getSession().setAttribute("cart", cart);
-        return new ResponseEntity<>(new ApiResponse("Delete success!!!", true), HttpStatus.OK);
-    }
-    @PutMapping("/cart/update/{id}")
-    public ResponseEntity<CartItem> updateCartItem(final HttpServletRequest request, final HttpServletResponse response,
-                                                   @PathVariable("id")int id, @RequestBody CartItem cartItem){
-        Cart cart = (Cart)request.getSession().getAttribute("cart");
-        List<CartItem> itemList = cart.getItemList();
-
-//        for (CartItem item:itemList) {
-//            if(item.getProductID() == id){
-//                item = cartItem;
-//
-//            }
-//        }
-        cartItem.setTotalPrice(cartItem.getPrice()* cartItem.getQuantity());
-
-        for (int i = 0; i < itemList.size(); i++) {
-            if(itemList.get(i).getProductID() == id){
-                itemList.set(i, cartItem);
-            }
-        }
-        cart.setItemList(itemList);
-        request.getSession().setAttribute("cart", cart);
-        return ResponseEntity.ok(cartItem);
+    @GetMapping("/filter-by-catalog/{id}")
+    public ResponseEntity<List<ProductDto>>filterByCatalog(@PathVariable("id")int id){
+        return ResponseEntity.ok(productService.filterByCatalog(id));
     }
 }

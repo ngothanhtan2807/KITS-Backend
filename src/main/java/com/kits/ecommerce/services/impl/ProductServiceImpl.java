@@ -54,6 +54,8 @@ public class ProductServiceImpl implements ProductService {
     @PersistenceContext
     EntityManager entityManager;
 
+    @Autowired
+    LengthRepo lengthRepo;
     @Override
     public ProductDto getProductById(Integer productId) {
         Product product = productRepo.findById(productId).orElseThrow(() -> new ResoureNotFoundException("Product", "ID", productId));
@@ -77,6 +79,7 @@ public class ProductServiceImpl implements ProductService {
 
         try {
             Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
+            Length length = lengthRepo.findById(productDto.getLengthIDX()).orElseThrow(()->new ResoureNotFoundException("Length", "ID", productDto.getLengthIDX()));
             Set<MultipartFile> files = productDto.getFiles();
 
             Product product = this.convertToProduct(productDto);
@@ -118,6 +121,7 @@ public class ProductServiceImpl implements ProductService {
                 product.addProductImages(imageProduct);
             }
             product.setCatalog(catalog);
+            product.setLength(length);
             productRepo.save(product);
 
             return this.convertToProductDto(product);
@@ -132,6 +136,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto updateProduct(ProductDto productDto, Integer productId) {
         try {
             Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
+            Length length = lengthRepo.findById(productDto.getLengthIDX()).orElseThrow(()->new ResoureNotFoundException("Length", "ID", productDto.getLengthIDX()));
 
             //lấy ảnh của productDto
             Set<MultipartFile> files = productDto.getFiles();
@@ -185,7 +190,7 @@ public class ProductServiceImpl implements ProductService {
             }
             product.setSizes(sizes);
             product.setCatalog(catalog);
-
+            product.setLength(length);
             productRepo.save(product);
 
             return this.convertToProductDto(product);
@@ -225,6 +230,7 @@ public class ProductServiceImpl implements ProductService {
         for (Color color : listColor) {
             productDto.getColorsID().add(color.getId());
         }
+        productDto.setLengthIDX(product.getLength().getId());
         return productDto;
     }
 
@@ -285,6 +291,28 @@ public class ProductServiceImpl implements ProductService {
         List<ProductDto> productDtos = new ArrayList<>();
         for (Product p : products) {
             productDtos.add(this.convertToProductDto(p));
+        }
+        return productDtos;
+    }
+
+    @Override
+    public List<ProductDto> filterByLength(int id) {
+        List<Product> products = productRepo.filterByLength(id);
+        List<ProductDto>productDtos = new ArrayList<>();
+
+        for (Product product : products) {
+            productDtos.add(this.convertToProductDto(product));
+        }
+        return productDtos;
+    }
+
+    @Override
+    public List<ProductDto> filterByCatalog(int id) {
+        List<Product> products = productRepo.filterByCatalog(id);
+        List<ProductDto>productDtos = new ArrayList<>();
+
+        for (Product product : products) {
+            productDtos.add(this.convertToProductDto(product));
         }
         return productDtos;
     }
