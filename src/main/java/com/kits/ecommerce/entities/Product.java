@@ -27,6 +27,8 @@ public class Product extends TimeAuditable {
     private String detail;
     private double price;
 
+    private int quantity;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product"/* tên property product trong class ProductImages */
             /*, fetch = FetchType.EAGER, orphanRemoval = true*/)
     private List<ImageProduct> listImage;
@@ -46,6 +48,10 @@ public class Product extends TimeAuditable {
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "product_color", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "color_id"))
     private Set<Color> colors;
+
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinTable(name = "product_wish", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "wish_id"))
+    private Set<WishList> wishLists;
 
 
     public void addProductImages(ImageProduct productImages1) {
