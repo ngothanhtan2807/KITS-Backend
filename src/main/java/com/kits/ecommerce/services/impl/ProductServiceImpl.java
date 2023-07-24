@@ -140,41 +140,51 @@ public class ProductServiceImpl implements ProductService {
             //lấy ảnh của productDto
             Set<MultipartFile> files = productDto.getFiles();
 //product gốc
+
             Product product0 = productRepo.findById(productId).orElseThrow(() -> new ResoureNotFoundException("Product", "ID", productId));
 //ds ảnh của product gốc
             List<ImageProduct> imageProductList = product0.getListImage();
 //xóa ảnh trong db
-            for (ImageProduct image : imageProductList) {
-                image.setProduct(null);
-                imageProductRepo.save(image);
-                imageProductRepo.deleteById(image.getId());
+            Product product = this.convertToProduct(productDto);//moi
+            if(files == null || files.size()==0){
+
+                product.setListImage(product0.getListImage());
+            }
+            else {//goc
+
+                for (ImageProduct image : imageProductList) {
+                    image.setProduct(null);
+                    imageProductRepo.save(image);
+                    imageProductRepo.deleteById(image.getId());
+                }
+
+                for (ImageProduct image : product0.getListImage()) {
+                    File file = new File(root + "/" + image.getPath());
+
+                    file.delete();
+                }
+                product0.clearProductImages();//remove old image
+                productRepo.save(product0);
+
+                for (MultipartFile file : files) {
+                    UUID uuid = UUID.randomUUID();
+                    String uuidString = uuid.toString();
+                    String ext = FilenameUtils.getExtension(file.getOriginalFilename());//ext name
+                    Files.copy(file.getInputStream(), this.root.resolve(uuidString + "." + ext));
+//rename file
+                    ImageProduct imageProduct = new ImageProduct();
+                    imageProduct.setProduct(product);
+                    imageProduct.setPath(uuidString + "." + ext);
+                    imageProduct.setTitle(uuidString + "." + ext);
+
+
+                    product.addProductImages(imageProduct);
+                }
             }
 
-            for (ImageProduct image : product0.getListImage()) {
-                File file = new File(root + "/" + image.getPath());
-
-                file.delete();
-            }
-            product0.clearProductImages();//remove old image
-            productRepo.save(product0);
-
-            Product product = this.convertToProduct(productDto);
             product.setId(product0.getId());
 
-            for (MultipartFile file : files) {
-                UUID uuid = UUID.randomUUID();
-                String uuidString = uuid.toString();
-                String ext = FilenameUtils.getExtension(file.getOriginalFilename());//ext name
-                Files.copy(file.getInputStream(), this.root.resolve(uuidString + "." + ext));
-//rename file
-                ImageProduct imageProduct = new ImageProduct();
-                imageProduct.setProduct(product);
-                imageProduct.setPath(uuidString + "." + ext);
-                imageProduct.setTitle(uuidString + "." + ext);
 
-
-                product.addProductImages(imageProduct);
-            }
             Set<Color> colors = new HashSet<>();
             List<Integer> colorID = productDto.getColorsID();
             for (Integer i : colorID) {
@@ -191,6 +201,9 @@ public class ProductServiceImpl implements ProductService {
             Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
             Length length = lengthRepo.findById(productDto.getLengthIDX()).orElseThrow(() -> new ResoureNotFoundException("Length", "ID", productDto.getLengthIDX()));
 
+            if(productDto.getQuantity() == null){
+                product.setQuantity(product0.getQuantity());
+            }
             product.setSizes(sizes);
             product.setCatalog(catalog);
             product.setLength(length);
