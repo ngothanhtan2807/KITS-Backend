@@ -51,6 +51,7 @@ public class AuthController {
 
         ResponseFetchMe res = new ResponseFetchMe(userDto.getUserId(),userDto.getName()
                 ,userDto.getEmail(),userDto.getAvatar(),userDto.getRoles().get(0).getRoleName());
+//user login success
 
         return new ResponseEntity<ResponseFetchMe>(res, HttpStatus.OK);
     }

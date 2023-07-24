@@ -16,4 +16,5 @@ public class CartItem implements Serializable {
     private int quantity;
     private double price;
     private Double totalPrice;
+
 }

@@ -28,6 +28,8 @@ public class User extends TimeAuditable implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date birthdate;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private WishList wish;
 
 
     @ManyToMany( fetch = FetchType.EAGER)

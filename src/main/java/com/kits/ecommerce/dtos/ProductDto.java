@@ -21,6 +21,7 @@ public class ProductDto {
     private String description;
     private String detail;
     private double price;
+    private int quantity;
     private int catalogID;
     private int lengthIDX;
     private LengthDto length;
