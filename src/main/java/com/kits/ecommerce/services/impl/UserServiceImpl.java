@@ -191,4 +191,8 @@ public class UserServiceImpl implements UserService {
 //        userDto.setPassword(user.getPassword());
         return userDto;
     }
+    @Override
+    public int count(){
+        return (int)userRepo.count();
+    }
 }

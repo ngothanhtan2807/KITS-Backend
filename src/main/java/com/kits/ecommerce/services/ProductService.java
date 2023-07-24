@@ -34,4 +34,6 @@ public interface ProductService {
     Product convertToProduct(ProductDto productDto);
 
     ProductDto convertToProductDto(Product product);
+
+    int count();
 }

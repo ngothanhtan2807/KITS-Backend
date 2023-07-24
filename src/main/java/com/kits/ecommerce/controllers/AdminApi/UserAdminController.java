@@ -155,7 +155,10 @@ public class UserAdminController {
 //
 //    }
 
-
+@GetMapping("/users/count")
+    public ResponseEntity<Integer>count(){
+        return ResponseEntity.ok(userService.count());
+}
 
 
 

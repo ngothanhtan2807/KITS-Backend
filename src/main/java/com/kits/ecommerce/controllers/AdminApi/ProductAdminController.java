@@ -63,5 +63,9 @@ public class ProductAdminController {
         }
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(image);
     }
+    @GetMapping("/count")
+    public ResponseEntity<Integer> countProduct(){
+        return ResponseEntity.ok(productService.count());
+    }
 
 }

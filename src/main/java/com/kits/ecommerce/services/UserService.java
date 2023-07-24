@@ -22,7 +22,7 @@ public interface UserService {
 
    UserDto registerUser(UserDto userDto);
 
-
+int count();
 
 
 }

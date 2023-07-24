@@ -334,4 +334,9 @@ public class ProductServiceImpl implements ProductService {
         }
         return productDtos;
     }
+    @Override
+    public int count(){
+        int count = productRepo.totalQuantity();
+        return count;
+    }
 }
