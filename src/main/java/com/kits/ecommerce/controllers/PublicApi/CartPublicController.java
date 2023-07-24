@@ -93,16 +93,16 @@ public class CartPublicController {
         for (CartItem item : itemList) {
             if (item.getProductID() == cartItem.getProductID()&& item.getColorID() == cartItem.getColorID()&&item.getSizeID() == cartItem.getSizeID()) {
                 item.setQuantity(item.getQuantity() + cartItem.getQuantity());
-                if (item.getQuantity() >= productDto.getQuantity()) {
-                    item.setQuantity(productDto.getQuantity());
+                if (item.getQuantity() >= productDto.getTotalQuantity()) {
+                    item.setQuantity(productDto.getTotalQuantity());
                 }
             } else {
                 count++;
             }
         }
         if (count == itemList.size()) {
-            if(cartItem.getQuantity() >= productDto.getQuantity()){
-                cartItem.setQuantity(productDto.getQuantity());
+            if(cartItem.getQuantity() >= productDto.getTotalQuantity()){
+                cartItem.setQuantity(productDto.getTotalQuantity());
             }
             itemList.add(cartItem);
         }
@@ -115,15 +115,15 @@ public class CartPublicController {
         return ResponseEntity.ok(cart);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteCartItem(@PathVariable("id") int id,
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteCartItem(@RequestParam("id") int id,@RequestParam("size")int sizeID, @RequestParam("color")int colorID,
                                             final HttpServletRequest request, final HttpServletResponse response) {
 
         Cart cart = (Cart) request.getSession().getAttribute("cart");
         List<CartItem> itemList = cart.getItemList();
         int size = itemList.size();
         for (int i = 0; i < size; i++) {
-            if (itemList.get(i).getProductID() == id) {
+            if (itemList.get(i).getProductID() == id && itemList.get(i).getSizeID() == sizeID && itemList.get(i).getColorID() == colorID) {
                 itemList.remove(i);
             }
         }
@@ -156,8 +156,8 @@ public class CartPublicController {
                 cartItem.setSize(item.getSize());
                 cartItem.setPrice(item.getPrice());
                 cartItem.setImage(item.getImage());
-                if (item.getQuantity() >= productDto.getQuantity()) {
-                    item.setQuantity(productDto.getQuantity());
+                if (item.getQuantity() >= productDto.getTotalQuantity()) {
+                    item.setQuantity(productDto.getTotalQuantity());
                 }
             }
             else{

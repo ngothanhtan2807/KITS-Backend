@@ -22,7 +22,7 @@ public class ProductDto implements Serializable {
     private String description;
     private String detail;
     private double price;
-    private Integer quantity;
+    private Integer totalQuantity;
     private int catalogID;
     private int lengthIDX;
     private LengthDto length;

@@ -201,8 +201,8 @@ public class ProductServiceImpl implements ProductService {
             Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
             Length length = lengthRepo.findById(productDto.getLengthIDX()).orElseThrow(() -> new ResoureNotFoundException("Length", "ID", productDto.getLengthIDX()));
 
-            if(productDto.getQuantity() == null){
-                product.setQuantity(product0.getQuantity());
+            if(productDto.getTotalQuantity() == null){
+                product.setTotalQuantity(product0.getTotalQuantity());
             }
             product.setSizes(sizes);
             product.setCatalog(catalog);
