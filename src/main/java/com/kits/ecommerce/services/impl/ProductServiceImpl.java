@@ -56,6 +56,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     LengthRepo lengthRepo;
+
     @Override
     public ProductDto getProductById(Integer productId) {
         Product product = productRepo.findById(productId).orElseThrow(() -> new ResoureNotFoundException("Product", "ID", productId));
@@ -79,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
 
         try {
             Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
-            Length length = lengthRepo.findById(productDto.getLengthIDX()).orElseThrow(()->new ResoureNotFoundException("Length", "ID", productDto.getLengthIDX()));
+            Length length = lengthRepo.findById(productDto.getLengthIDX()).orElseThrow(() -> new ResoureNotFoundException("Length", "ID", productDto.getLengthIDX()));
             Set<MultipartFile> files = productDto.getFiles();
 
             Product product = this.convertToProduct(productDto);
@@ -136,7 +137,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto updateProduct(ProductDto productDto, Integer productId) {
         try {
             Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
-            Length length = lengthRepo.findById(productDto.getLengthIDX()).orElseThrow(()->new ResoureNotFoundException("Length", "ID", productDto.getLengthIDX()));
+            Length length = lengthRepo.findById(productDto.getLengthIDX()).orElseThrow(() -> new ResoureNotFoundException("Length", "ID", productDto.getLengthIDX()));
 
             //lấy ảnh của productDto
             Set<MultipartFile> files = productDto.getFiles();
@@ -212,12 +213,14 @@ public class ProductServiceImpl implements ProductService {
         productRepo.deleteById(product.getId());
     }
 
+    @Override
     public Product convertToProduct(ProductDto productDto) {
         Product product = this.modelMapper.map(productDto, Product.class);
 
         return product;
     }
 
+    @Override
     public ProductDto convertToProductDto(Product product) {
         ProductDto productDto = this.modelMapper.map(product, ProductDto.class);
 
@@ -298,7 +301,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> filterByLength(int id) {
         List<Product> products = productRepo.filterByLength(id);
-        List<ProductDto>productDtos = new ArrayList<>();
+        List<ProductDto> productDtos = new ArrayList<>();
 
         for (Product product : products) {
             productDtos.add(this.convertToProductDto(product));
@@ -309,7 +312,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> filterByCatalog(int id) {
         List<Product> products = productRepo.filterByCatalog(id);
-        List<ProductDto>productDtos = new ArrayList<>();
+        List<ProductDto> productDtos = new ArrayList<>();
 
         for (Product product : products) {
             productDtos.add(this.convertToProductDto(product));
