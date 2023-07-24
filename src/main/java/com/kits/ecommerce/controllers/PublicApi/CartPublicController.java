@@ -171,14 +171,16 @@ public class CartPublicController {
         return ResponseEntity.ok(cartItem);
     }
 
-    @DeleteMapping("/delete-cart")
-    public ResponseEntity<?> deleteCart(final HttpServletRequest request, final HttpServletResponse response) {
-//        Cart cart = (Cart) request.getSession().getAttribute("cart");
-//
-        request.getSession().invalidate();
-        return new ResponseEntity<>(new ApiResponse("Delete success", true), HttpStatus.OK);
-    }
 
+
+    @DeleteMapping("/delete-cart")
+    public ResponseEntity<?> deleteCart (final HttpServletRequest request, HttpServletResponse response){
+        Cart cart = (Cart) request.getSession().getAttribute("cart");
+        cart = null;
+        request.getSession().setAttribute("cart", cart);
+        return new ResponseEntity<>(new ApiResponse("Delete success", true), HttpStatus.OK);
+
+    }
     @GetMapping("/count")
     public ResponseEntity<Integer> countItem(final HttpServletRequest request, final HttpServletResponse response) {
         Cart cart = (Cart) request.getSession().getAttribute("cart");
@@ -189,5 +191,24 @@ public class CartPublicController {
             count = cart.getItemList().size();
         }
         return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/total-price")
+    public ResponseEntity<Double> getTotalPrice(HttpServletRequest request, HttpServletResponse response){
+        double total = 0;
+        Cart cart = (Cart) request.getSession().getAttribute("cart");
+        if(cart == null || cart.getItemList().size() == 0){
+            total = 0;
+        }
+        else {
+            List<CartItem> cartItems = cart.getItemList();
+
+            for (int i = 0; i < cartItems.size(); i++) {
+                total += cartItems.get(i).getTotalPrice();
+            }
+        }
+
+
+        return ResponseEntity.ok(total);
     }
 }

@@ -42,8 +42,8 @@ public class WishListConrtoller {
         return ResponseEntity.ok(wishList);
     }
 
-    @PostMapping("")
-    public ResponseEntity<WishList> addToWishList(@RequestBody ProductDto productItem, final HttpServletRequest request) {
+    @GetMapping("/{id}")
+    public ResponseEntity<WishList> addToWishList(@PathVariable("id")int id, final HttpServletRequest request) {
 
         HttpSession httpSession = request.getSession();
         WishList wishList = null;
@@ -54,7 +54,7 @@ public class WishListConrtoller {
             wishList = new WishList();
             httpSession.setAttribute("wishList", wishList);
         }
-        Product product = productRepo.findById(productItem.getId()).orElseThrow(() -> new ResoureNotFoundException("Product", "ID", productItem.getId()));
+        Product product = productRepo.findById(id).orElseThrow(() -> new ResoureNotFoundException("Product", "ID",id));
         ProductDto productDto = productService.convertToProductDto(product);
 
 
