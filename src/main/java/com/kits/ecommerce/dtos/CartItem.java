@@ -18,7 +18,6 @@ public class CartItem implements Serializable {
     private int colorID;
     private SizeDto size;
     private ColorDto color;
-
     private int quantity;
     private double price;
     private Double totalPrice;

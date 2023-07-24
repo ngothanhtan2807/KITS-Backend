@@ -49,10 +49,6 @@ public class Product extends TimeAuditable {
     @JoinTable(name = "product_color", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "color_id"))
     private Set<Color> colors;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinTable(name = "product_wish", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "wish_id"))
-    private Set<WishList> wishLists;
-
 
     public void addProductImages(ImageProduct productImages1) {
         productImages1.setProduct(this);
