@@ -91,7 +91,7 @@ public class CartPublicController {
 
         int count = 0;
         for (CartItem item : itemList) {
-            if (item.getProductID() == cartItem.getProductID()) {
+            if (item.getProductID() == cartItem.getProductID()&& item.getColorID() == cartItem.getColorID()&&item.getSizeID() == cartItem.getSizeID()) {
                 item.setQuantity(item.getQuantity() + cartItem.getQuantity());
                 if (item.getQuantity() >= productDto.getQuantity()) {
                     item.setQuantity(productDto.getQuantity());
@@ -141,28 +141,34 @@ public class CartPublicController {
         Product product = productRepo.findById(cartItem.getProductID()).orElseThrow(() -> new ResoureNotFoundException("Product", "ID", cartItem.getProductID()));
         ProductDto productDto = productService.convertToProductDto(product);
 
-        Color color = colorRepo.findById(cartItem.getColorID()).orElseThrow(() -> new ResoureNotFoundException("Color", "ID", cartItem.getColorID()));
-        Size size = sizeRepo.findById(cartItem.getSizeID()).orElseThrow(() -> new ResoureNotFoundException("Size", "ID", cartItem.getSizeID()));
+//        Color color = colorRepo.findById(cartItem.getColorID()).orElseThrow(() -> new ResoureNotFoundException("Color", "ID", cartItem.getColorID()));
+//        Size size = sizeRepo.findById(cartItem.getSizeID()).orElseThrow(() -> new ResoureNotFoundException("Size", "ID", cartItem.getSizeID()));
 
-        cartItem.setColor(colorService.convertToColorDto(color));
-        cartItem.setSize(sizeService.convertToSizeDto(size));
 
-        cartItem.setProductName(productDto.getName());
-        cartItem.setPrice(productDto.getPrice());
-        cartItem.setImage(productDto.getListImage().get(0).getTitle());
 
         for (CartItem item : itemList) {
-            if (item.getProductID() == cartItem.getProductID()) {
+
+            if ((item.getProductID() == cartItem.getProductID()) && (item.getColorID() == cartItem.getColorID()) && (item.getSizeID() == cartItem.getSizeID())) {
+
                 item.setQuantity(item.getQuantity() + cartItem.getQuantity());
+                cartItem.setColor(item.getColor());
+                cartItem.setProductName(item.getProductName());
+                cartItem.setSize(item.getSize());
+                cartItem.setPrice(item.getPrice());
+                cartItem.setImage(item.getImage());
                 if (item.getQuantity() >= productDto.getQuantity()) {
                     item.setQuantity(productDto.getQuantity());
                 }
-            }}
+            }
+            else{
+                continue;
+            }
+            }
 
         cartItem.setTotalPrice(cartItem.getPrice() * cartItem.getQuantity());
 
         for (int i = 0; i < itemList.size(); i++) {
-            if (itemList.get(i).getProductID() == id) {
+            if ((itemList.get(i).getProductID() == cartItem.getProductID()) && (itemList.get(i).getColorID() == cartItem.getColorID()) && (itemList.get(i).getSizeID() == cartItem.getSizeID())) {
                 itemList.set(i, cartItem);
             }
         }
