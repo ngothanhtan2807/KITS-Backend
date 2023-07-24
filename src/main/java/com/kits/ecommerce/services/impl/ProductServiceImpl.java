@@ -136,8 +136,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto updateProduct(ProductDto productDto, Integer productId) {
         try {
-            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
-            Length length = lengthRepo.findById(productDto.getLengthIDX()).orElseThrow(() -> new ResoureNotFoundException("Length", "ID", productDto.getLengthIDX()));
 
             //lấy ảnh của productDto
             Set<MultipartFile> files = productDto.getFiles();
@@ -189,6 +187,10 @@ public class ProductServiceImpl implements ProductService {
             for (Integer i : sizesID) {
                 sizes.add(sizeRepo.findById(i).orElseThrow(() -> new ResoureNotFoundException("Size", "ID", i)));
             }
+
+            Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
+            Length length = lengthRepo.findById(productDto.getLengthIDX()).orElseThrow(() -> new ResoureNotFoundException("Length", "ID", productDto.getLengthIDX()));
+
             product.setSizes(sizes);
             product.setCatalog(catalog);
             product.setLength(length);
