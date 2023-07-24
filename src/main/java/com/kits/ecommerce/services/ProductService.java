@@ -30,4 +30,8 @@ public interface ProductService {
     List<ProductDto>filterByLength(int id);
 
     List<ProductDto>filterByCatalog(int id);
+
+    Product convertToProduct(ProductDto productDto);
+
+    ProductDto convertToProductDto(Product product);
 }
