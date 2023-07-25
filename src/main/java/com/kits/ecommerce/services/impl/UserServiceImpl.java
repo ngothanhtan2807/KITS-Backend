@@ -90,6 +90,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public UserDto updateAvatar(UserDto userDto, Integer userId) {
+        User user = this.userRepo.findById(userId)
+                .orElseThrow(() -> new ResoureNotFoundException("User", "Id", userId));
+        user.setAvatar(userDto.getAvatar());
+        User updatedUser = this.userRepo.save(user);
+        UserDto userDto1 = this.convertToUserDto(updatedUser);
+        return userDto1;
+    }
+
+    @Override
+    @Transactional
     public UserDto registerUser(UserDto userDto) {
 
         if (userRepo.existsByEmail(userDto.getEmail())) {
@@ -115,6 +126,17 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Transactional
+    @Override
+    public void updatePassword(UserDto userDTO) {
+        User user = userRepo.findById(userDTO.getUserId()).orElseThrow(NoResultException::new);
+
+        user.setPassword(new BCryptPasswordEncoder().encode(userDTO.getPassword()));
+
+        userRepo.save(user);
+    }
+
+
     @Override
     public UserDto getUserById(Integer userId) {
         User user = this.userRepo.findById(userId)
@@ -126,18 +148,11 @@ public class UserServiceImpl implements UserService {
     public PageDto<UserDto> getAllUsers(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
         if (pageNumber != null && pageSize != null) {
             Sort sort = (sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending());
-//        if(sortDir.equalsIgnoreCase("asc")) {
-//             sort = Sort.by(sortBy).ascending();
-//        }else {
-//            sort = Sort.by(sortBy).descending();
-//        }
-            Pageable p = PageRequest.of(pageNumber, pageSize, sort);
-            // nếu muốn sort từ cao đến thấp thêm .descending()
 
+            Pageable p = PageRequest.of(pageNumber, pageSize, sort);
 
             Page<User> pageUser = this.userRepo.findAll(p);
             List<User> allUsers = pageUser.getContent();
-//        List<Product> allProducts = this.productRepo.findAll();
             List<UserDto> userDtos = allUsers.stream().map((user) -> this.modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
 
             PageDto<UserDto> userPageResponse = new PageDto<>();
