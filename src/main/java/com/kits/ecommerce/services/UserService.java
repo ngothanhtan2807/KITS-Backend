@@ -20,9 +20,14 @@ public interface UserService {
 
    UserDto findByEmail(String email) ;
 
+   UserDto updateAvatar(UserDto userDto, Integer userId);
+
    UserDto registerUser(UserDto userDto);
 
-int count();
+   void updatePassword(UserDto userDTO);
+
+
+   int count();
 
 
 }
