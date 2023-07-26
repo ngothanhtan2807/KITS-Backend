@@ -59,11 +59,32 @@ public class WishListConrtoller {
 
 
         List<ProductDto> productDtoListList = wishList.getWishList();
-        if(productDtoListList.contains(productDto)){
-            productDtoListList.remove(productDto);
+//        if(productDtoListList.contains(productDto)){
+//            System.out.println("---------------------");
+//            productDtoListList.remove(productDto);
+//        }
+//        else {
+//            System.out.println("....................");
+//            productDtoListList.add(productDto);
+//        }
+        int count = 0;
+        for (int i = 0; i < productDtoListList.size(); i++) {
+            if(productDtoListList.get(i).getId() != productDto.getId()){
+                count++;
+            }
+        }
+        if(count == productDtoListList.size()){
+            productDtoListList.add(productDto);
         }
         else {
-            productDtoListList.add(productDto);
+//            int size = ;
+            for (int i = 0; i < productDtoListList.size(); i++) {
+                if(productDtoListList.get(i).getId() == productDto.getId()){
+                    productDtoListList.remove(i);
+                }
+
+            }
+            productDtoListList.remove(productDto);
         }
 
 
