@@ -43,6 +43,8 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private boolean status;
+
     public void addOderProdcut(OrderProduct orderProduct){
         orderProduct.setOrder(this);
         orderProducts.add(orderProduct);

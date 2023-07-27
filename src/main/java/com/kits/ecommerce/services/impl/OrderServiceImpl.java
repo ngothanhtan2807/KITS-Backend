@@ -135,6 +135,7 @@ public class OrderServiceImpl implements OrderService {
                 totalPrice+= cartItems.get(i).getTotalPrice();
             }
             order.setTotalPrice(totalPrice);
+            order.setStatus(false);
             orderRepo.save(order);
             httpSession.setAttribute("cart", null);
         } catch (Exception e) {
