@@ -53,6 +53,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderDto updateOrderByID(int orderID) {
+        Order order = orderRepo.findById(orderID).orElseThrow(() -> new ResoureNotFoundException("Order", "ID", orderID));
+        if (order.getStatus() == false) {
+            order.setStatus(true);
+            orderRepo.save(order);
+        } else {
+        }
+        return convertToOrderDto(order);
+    }
+
+    @Override
     public OrderDto findOrderByCode(String code) {
         Order order = orderRepo.findByCode(code);
         return convertToOrderDto(order);
@@ -61,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDto> findOrderByUserID(int userID) {
         List<Order> orders = orderRepo.findOrderByUserID(userID);
-        List<OrderDto>orderDtos = new ArrayList<>();
+        List<OrderDto> orderDtos = new ArrayList<>();
 
         for (int i = 0; i < orders.size(); i++) {
             orderDtos.add(convertToOrderDto(orders.get(i)));
@@ -72,8 +83,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> findOrder() {
-        List<Order>orders = orderRepo.findAll();
-        List<OrderDto>orderDtos = new ArrayList<>();
+        List<Order> orders = orderRepo.findAll();
+        List<OrderDto> orderDtos = new ArrayList<>();
 
         for (int i = 0; i < orders.size(); i++) {
             orderDtos.add(convertToOrderDto(orders.get(i)));
@@ -100,7 +111,7 @@ public class OrderServiceImpl implements OrderService {
 //            Object principal = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication()
 //                    .getPrincipal();
 //            String email = ((User)principal).getEmail();
-            User user = userRepo.findById(orderDto.getUserID()).orElseThrow(()-> new ResoureNotFoundException("User", "ID", orderDto.getUserID()));
+            User user = userRepo.findById(orderDto.getUserID()).orElseThrow(() -> new ResoureNotFoundException("User", "ID", orderDto.getUserID()));
 //           String customerPhone
 
             Order order = convertToOrder(orderDto);
@@ -111,6 +122,13 @@ public class OrderServiceImpl implements OrderService {
 //            order.setCustomerName(orderDto.getCustomerName());
 //            order.setCustomerPhone(orderDto.getCustomerPhone());
 
+            int type = orderDto.getType();
+            if (type == 0) {
+                order.setStatus(false);
+            }
+            if (type == 1) {
+                order.setStatus(true);
+            }
             order.setUser(user);
 
             Cart cart = (Cart) httpSession.getAttribute("cart");
@@ -132,7 +150,7 @@ public class OrderServiceImpl implements OrderService {
                 order.addOderProdcut(orderProduct);
 //                orderProductRepo.save(orderProduct);
 
-                totalPrice+= cartItems.get(i).getTotalPrice();
+                totalPrice += cartItems.get(i).getTotalPrice();
             }
             order.setTotalPrice(totalPrice);
             order.setStatus(false);
@@ -153,8 +171,7 @@ public class OrderServiceImpl implements OrderService {
         OrderDto orderDto = modelMapper.map(order, OrderDto.class);
 
 
-
-        return  orderDto;
+        return orderDto;
     }
 
 }
