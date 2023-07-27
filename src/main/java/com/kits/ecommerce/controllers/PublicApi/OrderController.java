@@ -2,6 +2,7 @@ package com.kits.ecommerce.controllers.PublicApi;
 
 import com.kits.ecommerce.dtos.ApiResponse;
 import com.kits.ecommerce.dtos.OrderDto;
+import com.kits.ecommerce.dtos.ProductDto;
 import com.kits.ecommerce.entities.Order;
 import com.kits.ecommerce.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
+//    @Autowired
+//    OrderProductService productService;
     @GetMapping("")
     public ResponseEntity<List<OrderDto>>getAllOrder(){
         return ResponseEntity.ok(orderService.findOrder());
@@ -41,5 +44,9 @@ public class OrderController {
     public ResponseEntity<?>updateOrder(@PathVariable("id")Integer id){
         orderService.updateOrderByID(id);
         return new ResponseEntity<>(new ApiResponse("Success", true), HttpStatus.OK);
+    }
+    @GetMapping("/hot-saler")
+    public ResponseEntity<List<ProductDto>> getHotSaler(){
+        return ResponseEntity.ok(orderService.hotSaler());
     }
 }

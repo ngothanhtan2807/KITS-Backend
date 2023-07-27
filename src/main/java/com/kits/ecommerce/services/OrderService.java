@@ -1,6 +1,7 @@
 package com.kits.ecommerce.services;
 
 import com.kits.ecommerce.dtos.OrderDto;
+import com.kits.ecommerce.dtos.ProductDto;
 import com.kits.ecommerce.entities.Order;
 
 import javax.servlet.http.HttpSession;
@@ -23,4 +24,6 @@ public interface OrderService {
     Order convertToOrder(OrderDto orderDto);
 
     OrderDto convertToOrderDto(Order order);
+
+    List<ProductDto> hotSaler();
 }
