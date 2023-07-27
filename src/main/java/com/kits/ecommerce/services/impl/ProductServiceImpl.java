@@ -305,7 +305,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> search(SearchDto searchDto) {
 
-        List<Product> products = productRepo.findProductsBySizeColorAndCatalog(searchDto.getSize(), searchDto.getCatalogID(), searchDto.getColor(), searchDto.getStartPrice(), searchDto.getEndPrice());
+        List<Product> products = productRepo.findProductsBySizeColorAndCatalog(searchDto.getSize(), searchDto.getCatalogID(), searchDto.getColor(), searchDto.getStartPrice(), searchDto.getEndPrice(),searchDto.getLengthID());
         List<ProductDto> productDtos = new ArrayList<>();
         for (Product p : products) {
             productDtos.add(this.convertToProductDto(p));
