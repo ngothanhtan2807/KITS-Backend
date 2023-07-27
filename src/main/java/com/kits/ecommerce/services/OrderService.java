@@ -9,6 +9,8 @@ import java.util.List;
 public interface OrderService {
     OrderDto findOrderById(int orderID);
 
+    OrderDto updateOrderByID(int orderID);
+
     OrderDto findOrderByCode(String code);
 
     List<OrderDto>findOrderByUserID(int userID);

@@ -23,10 +23,23 @@ public class OrderController {
     public ResponseEntity<List<OrderDto>>getAllOrder(){
         return ResponseEntity.ok(orderService.findOrder());
     }
-    @PostMapping("")
-    public ResponseEntity<?>createOrder(@RequestBody OrderDto orderDto, HttpSession httpSession){
-        orderService.saveOrderService(orderDto, httpSession);
-return new ResponseEntity(new ApiResponse("success", true), HttpStatus.OK);
-
+//    @PostMapping("")
+//    public ResponseEntity<?>createOrder(@RequestBody OrderDto orderDto, HttpSession httpSession){
+//        orderService.saveOrderService(orderDto, httpSession);
+//return new ResponseEntity(new ApiResponse("success", true), HttpStatus.OK);
+//
+//    }
+    @GetMapping("/{userID}")
+    public ResponseEntity<List<OrderDto>>getOrdersByUser(@PathVariable("userID")Integer id){
+        return  ResponseEntity.ok(orderService.findOrderByUserID(id));
+    }
+    @GetMapping("/order/{id}")
+    public ResponseEntity<OrderDto>getOrderById(@PathVariable("id")Integer id){
+        return ResponseEntity.ok(orderService.findOrderById(id));
+    }
+    @PostMapping("/update/{id}")
+    public ResponseEntity<?>updateOrder(@PathVariable("id")Integer id){
+        orderService.updateOrderByID(id);
+        return new ResponseEntity<>(new ApiResponse("Success", true), HttpStatus.OK);
     }
 }

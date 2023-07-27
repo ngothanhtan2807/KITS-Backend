@@ -23,7 +23,13 @@ public class OrderDto {
     private String customerEmail;
     private int userID;
     private List<OrderProductDto>orderProducts;
-//    private UserDto user;
 
+    public Long vnp_Ammount;
+    public String vnp_OrderInfo;
+    public String vnp_OrderType = "200000";
+    public Long vnp_TxnRef;
+//    private UserDto user;
+    public Integer type;
+    private Boolean status;
 
 }
