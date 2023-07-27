@@ -25,4 +25,6 @@ public class Size extends  TimeAuditable{
     @ManyToMany(mappedBy = "sizes", cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Product> productList = new ArrayList<>();
+
+
 }
