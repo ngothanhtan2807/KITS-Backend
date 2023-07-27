@@ -116,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
 
             Order order = convertToOrder(orderDto);
             order.setOrderProducts(new ArrayList<>());
-            order.setCode("CODE-" + System.currentTimeMillis());
+//            order.setCode("CODE-" + System.currentTimeMillis());
 //            order.setCustomerEmail(orderDto.getCustomerEmail());
 //            order.setCustomerAddress(orderDto.getCustomerAddress());
 //            order.setCustomerName(orderDto.getCustomerName());
