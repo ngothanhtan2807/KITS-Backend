@@ -124,11 +124,7 @@ public class OrderServiceImpl implements OrderService {
 
             Order order = convertToOrder(orderDto);
             order.setOrderProducts(new ArrayList<>());
-//            order.setCode("CODE-" + System.currentTimeMillis());
-//            order.setCustomerEmail(orderDto.getCustomerEmail());
-//            order.setCustomerAddress(orderDto.getCustomerAddress());
-//            order.setCustomerName(orderDto.getCustomerName());
-//            order.setCustomerPhone(orderDto.getCustomerPhone());
+
 
             int type = orderDto.getType();
             if (type == 0) {
@@ -164,6 +160,7 @@ public class OrderServiceImpl implements OrderService {
             order.setStatus(false);
             orderRepo.save(order);
             httpSession.setAttribute("cart", null);
+            httpSession.setAttribute("order", null);
         } catch (Exception e) {
             throw e;
         }

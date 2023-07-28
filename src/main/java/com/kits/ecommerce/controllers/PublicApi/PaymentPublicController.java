@@ -1,9 +1,6 @@
 package com.kits.ecommerce.controllers.PublicApi;
 
-import com.kits.ecommerce.dtos.ApiResponse;
-import com.kits.ecommerce.dtos.Cart;
-import com.kits.ecommerce.dtos.OrderDto;
-import com.kits.ecommerce.dtos.PaymentDto;
+import com.kits.ecommerce.dtos.*;
 import com.kits.ecommerce.services.OrderService;
 import com.kits.ecommerce.services.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Random;
 
 @RestController
@@ -31,12 +29,17 @@ public class PaymentPublicController {
     @PostMapping("/pay")
     public String pay(@RequestBody OrderDto orderDto, HttpServletRequest request) {
         try {
+
+
             Cart cart = (Cart)request.getSession().getAttribute("cart");
             long current = System.currentTimeMillis();
+
 //            Random random = new Random();
 //            long randomNumber = random.nextInt(90000) + 10000; // tạo số ngẫu nhiên từ 10000 đến 99999
             orderDto.setVnp_TxnRef(current);
+            orderDto.setCode("ORDER-"+current);
             orderDto.setVnp_OrderInfo("thanh toan hoa don ORDER-"+current);
+            request.getSession().setAttribute("order", orderDto);
            double price = 0;
             for (int i = 0; i < cart.getItemList().size(); i++) {
                 price+= cart.getItemList().get(i).getTotalPrice();
@@ -59,5 +62,23 @@ public class PaymentPublicController {
         orderService.saveOrderService(orderDto, httpSession);
         return new ResponseEntity(new ApiResponse("success", true), HttpStatus.OK);
 
+    }
+    @PostMapping("/submit-order")
+    public ResponseEntity<?>submit(@RequestBody SubmitOrderDto result, HttpServletRequest request, HttpSession httpSession){
+        OrderDto orderDto = (OrderDto) request.getSession().getAttribute("order");
+        String[] out = result.getString().split("&");
+        for (int i = 0; i < out.length; i++) {
+            if(out[i].startsWith("vnp_ResponseCode")){
+                String[]code = out[i].split("=");
+                if(code[1].equals("00")){
+                    System.out.println("--------------code: "+ code[1]);
+                    orderDto.setType(1);
+                    orderService.saveOrderService(orderDto, httpSession);
+                }
+            }
+        }
+
+
+        return new ResponseEntity<>(new ApiResponse("success", true), HttpStatus.OK);
     }
 }
