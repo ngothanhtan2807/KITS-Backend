@@ -53,16 +53,6 @@ public class ProductAdminController {
         return new ResponseEntity(new ApiResponse("General delete success!!!", true), HttpStatus.OK);
     }
 
-    @GetMapping("/image/{filename}")
-    public ResponseEntity<byte[]> getImage(@PathVariable("filename") String filename) {
-        byte[] image = new byte[0];
-        try {
-            image = FileUtils.readFileToByteArray(new File("uploads/"+filename));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(image);
-    }
     @GetMapping("/count")
     public ResponseEntity<Integer> countProduct(){
         return ResponseEntity.ok(productService.count());

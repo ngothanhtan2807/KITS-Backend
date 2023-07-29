@@ -20,7 +20,7 @@ public interface ProductService {
 
     void deleteProduct(Integer generalId);
 
-    Resource load(String name);
+
     List<ProductDto> searchProductByName(String productName);
 
     PageDto<ProductDto> getProductsHomePage(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);

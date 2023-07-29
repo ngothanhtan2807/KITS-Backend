@@ -144,9 +144,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto updateProduct(ProductDto productDto, Integer productId) {
         try {
-            if (!root.toFile().exists()) {
-                Files.createDirectories(root);
-            }
+
             //lấy ảnh của productDto
             Set<MultipartFile> files = productDto.getFiles();
 //product gốc
@@ -169,9 +167,6 @@ public class ProductServiceImpl implements ProductService {
                 }
 
                 for (ImageProduct image : product0.getListImage()) {
-//                    File file = new File(root + "/" + image.getPath());
-//
-//                    file.delete();
                     fileUploadCloudinary.deleteImage(image.getPath());
                 }
                 product0.clearProductImages();//remove old image
@@ -228,13 +223,12 @@ public class ProductServiceImpl implements ProductService {
         List<ImageProduct> imageProductList = product.getListImage();
 
         for (ImageProduct image : imageProductList) {
-//                    File file = new File(root + "/" + image.getPath());
-//
-//                    file.delete();
             fileUploadCloudinary.deleteImage(image.getPath());
         }
         productRepo.deleteById(product.getId());
     }
+
+
 
     @Override
     public Product convertToProduct(ProductDto productDto) {
@@ -260,19 +254,7 @@ public class ProductServiceImpl implements ProductService {
         return productDto;
     }
 
-    public Resource load(String name) {
-        try {
-            Path file = root.resolve(name);
-            Resource resource = new UrlResource(file.toUri());
-            if (resource.exists()) {
-                return resource;
-            } else {
-                throw new RuntimeException("Could not read the file!!!");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error: " + e.getMessage());
-        }
-    }
+
 
     @Override
     public List<ProductDto> searchProductByName(String productName) {
