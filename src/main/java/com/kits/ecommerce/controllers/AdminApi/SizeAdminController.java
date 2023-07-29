@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/sizes")
+@CrossOrigin
 public class SizeAdminController {
     @Autowired
     SizeService sizeService;

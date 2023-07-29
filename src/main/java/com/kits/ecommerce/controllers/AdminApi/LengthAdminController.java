@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/lengths")
+@CrossOrigin
 public class LengthAdminController {
     @Autowired
     LengthService lengthService;

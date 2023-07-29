@@ -18,6 +18,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/public")
+@CrossOrigin
 public class UserPublicController {
     @Autowired
     private UserService userService;

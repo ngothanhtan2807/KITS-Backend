@@ -23,6 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/public/wish-list")
+@CrossOrigin
 public class WishListConrtoller {
     @Autowired
     ProductRepo productRepo;

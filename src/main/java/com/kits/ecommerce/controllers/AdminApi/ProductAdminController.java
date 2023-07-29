@@ -20,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/products")
+@CrossOrigin
 
 public class ProductAdminController {
 

@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/catalogs")
+@CrossOrigin
 public class CatalogAdminController {
     @Autowired
     CatalogService catalogService;

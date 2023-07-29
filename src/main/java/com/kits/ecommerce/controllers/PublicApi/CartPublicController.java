@@ -24,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/public/cart")
+@CrossOrigin
 public class CartPublicController {
 
     @Autowired

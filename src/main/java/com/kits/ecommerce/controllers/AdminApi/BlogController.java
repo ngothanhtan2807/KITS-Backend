@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import com.kits.ecommerce.dtos.ApiResponse;
 @RestController
 @RequestMapping("/api/admin/blogs")
+@CrossOrigin
 public class BlogController {
 
     @Autowired
