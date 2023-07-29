@@ -105,7 +105,9 @@ public class ProductServiceImpl implements ProductService {
                 lisColors.add(color);
             }
             product.setColors(lisColors);
-
+            if (!root.toFile().exists()) {
+                Files.createDirectories(root);
+            }
 
             for (MultipartFile file : files) {
                 UUID uuid = UUID.randomUUID();
@@ -136,7 +138,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto updateProduct(ProductDto productDto, Integer productId) {
         try {
-
+            if (!root.toFile().exists()) {
+                Files.createDirectories(root);
+            }
             //lấy ảnh của productDto
             Set<MultipartFile> files = productDto.getFiles();
 //product gốc
@@ -146,11 +150,10 @@ public class ProductServiceImpl implements ProductService {
             List<ImageProduct> imageProductList = product0.getListImage();
 //xóa ảnh trong db
             Product product = this.convertToProduct(productDto);//moi
-            if(files == null || files.size()==0){
+            if (files == null || files.size() == 0) {
 
                 product.setListImage(product0.getListImage());
-            }
-            else {//goc
+            } else {//goc
 
                 for (ImageProduct image : imageProductList) {
                     image.setProduct(null);
@@ -201,7 +204,7 @@ public class ProductServiceImpl implements ProductService {
             Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
             Length length = lengthRepo.findById(productDto.getLengthIDX()).orElseThrow(() -> new ResoureNotFoundException("Length", "ID", productDto.getLengthIDX()));
 
-            if(productDto.getTotalQuantity() == null){
+            if (productDto.getTotalQuantity() == null) {
                 product.setTotalQuantity(product0.getTotalQuantity());
             }
             product.setSizes(sizes);
@@ -305,7 +308,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> search(SearchDto searchDto) {
 
-        List<Product> products = productRepo.findProductsBySizeColorAndCatalog(searchDto.getSize(), searchDto.getCatalogID(), searchDto.getColor(), searchDto.getStartPrice(), searchDto.getEndPrice(),searchDto.getLengthID());
+        List<Product> products = productRepo.findProductsBySizeColorAndCatalog(searchDto.getSize(), searchDto.getCatalogID(), searchDto.getColor(), searchDto.getStartPrice(), searchDto.getEndPrice(), searchDto.getLengthID());
         List<ProductDto> productDtos = new ArrayList<>();
         for (Product p : products) {
             productDtos.add(this.convertToProductDto(p));
@@ -334,8 +337,9 @@ public class ProductServiceImpl implements ProductService {
         }
         return productDtos;
     }
+
     @Override
-    public int count(){
+    public int count() {
         int count = productRepo.totalQuantity();
         return count;
     }
