@@ -3,9 +3,11 @@ package com.kits.ecommerce.services.impl;
 import com.kits.ecommerce.dtos.PageDto;
 import com.kits.ecommerce.dtos.ProductDto;
 import com.kits.ecommerce.dtos.SearchDto;
+import com.kits.ecommerce.dtos.UserDto;
 import com.kits.ecommerce.entities.*;
 import com.kits.ecommerce.exeptions.ResoureNotFoundException;
 import com.kits.ecommerce.repositories.*;
+import com.kits.ecommerce.services.FileUploadCloudinary;
 import com.kits.ecommerce.services.ProductService;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
@@ -16,13 +18,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -57,6 +64,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     LengthRepo lengthRepo;
 
+    @Autowired
+    private FileUploadCloudinary fileUploadCloudinary ;
+
     @Override
     public ProductDto getProductById(Integer productId) {
         Product product = productRepo.findById(productId).orElseThrow(() -> new ResoureNotFoundException("Product", "ID", productId));
@@ -81,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             Catalog catalog = catalogRepo.findById(productDto.getCatalogID()).orElseThrow(() -> new ResoureNotFoundException("Catalog", "ID", productDto.getCatalogID()));
             Length length = lengthRepo.findById(productDto.getLengthIDX()).orElseThrow(() -> new ResoureNotFoundException("Length", "ID", productDto.getLengthIDX()));
-            Set<MultipartFile> files = productDto.getFiles();
+            
 
             Product product = this.convertToProduct(productDto);
 
@@ -95,7 +105,8 @@ public class ProductServiceImpl implements ProductService {
             }
             product.setSizes(lisSizes);
 
-
+           
+               
             List<Integer> colorID = productDto.getColorsID();
             Set<Color> lisColors = new HashSet<>();
             for (int i = 0; i < colorID.size(); i++) {
@@ -105,24 +116,19 @@ public class ProductServiceImpl implements ProductService {
                 lisColors.add(color);
             }
             product.setColors(lisColors);
-            if (!root.toFile().exists()) {
-                Files.createDirectories(root);
-            }
+         
 
-            for (MultipartFile file : files) {
-                UUID uuid = UUID.randomUUID();
-                String uuidString = uuid.toString();
-                String ext = FilenameUtils.getExtension(file.getOriginalFilename());//ext name
-                Files.copy(file.getInputStream(), this.root.resolve(uuidString + "." + ext));
-//rename file
+            Set<MultipartFile> files = productDto.getFiles();
+
+            for (MultipartFile file:files) {
+                String imageURL = fileUploadCloudinary.uploadFile(file);
                 ImageProduct imageProduct = new ImageProduct();
                 imageProduct.setProduct(product);
-                imageProduct.setPath(uuidString + "." + ext);
-                imageProduct.setTitle(uuidString + "." + ext);
-
-
+                imageProduct.setPath(imageURL);
+                imageProduct.setTitle(imageURL);
                 product.addProductImages(imageProduct);
             }
+
             product.setCatalog(catalog);
             product.setLength(length);
             productRepo.save(product);
@@ -138,9 +144,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto updateProduct(ProductDto productDto, Integer productId) {
         try {
-            if (!root.toFile().exists()) {
-                Files.createDirectories(root);
-            }
+
             //lấy ảnh của productDto
             Set<MultipartFile> files = productDto.getFiles();
 //product gốc
@@ -155,6 +159,7 @@ public class ProductServiceImpl implements ProductService {
                 product.setListImage(product0.getListImage());
             } else {//goc
 
+                //delete trong db
                 for (ImageProduct image : imageProductList) {
                     image.setProduct(null);
                     imageProductRepo.save(image);
@@ -162,27 +167,20 @@ public class ProductServiceImpl implements ProductService {
                 }
 
                 for (ImageProduct image : product0.getListImage()) {
-                    File file = new File(root + "/" + image.getPath());
-
-                    file.delete();
+                    fileUploadCloudinary.deleteImage(image.getPath());
                 }
                 product0.clearProductImages();//remove old image
                 productRepo.save(product0);
 
-                for (MultipartFile file : files) {
-                    UUID uuid = UUID.randomUUID();
-                    String uuidString = uuid.toString();
-                    String ext = FilenameUtils.getExtension(file.getOriginalFilename());//ext name
-                    Files.copy(file.getInputStream(), this.root.resolve(uuidString + "." + ext));
-//rename file
+                for (MultipartFile file:files) {
+                    String imageURL = fileUploadCloudinary.uploadFile(file);
                     ImageProduct imageProduct = new ImageProduct();
                     imageProduct.setProduct(product);
-                    imageProduct.setPath(uuidString + "." + ext);
-                    imageProduct.setTitle(uuidString + "." + ext);
-
-
+                    imageProduct.setPath(imageURL);
+                    imageProduct.setTitle(imageURL);
                     product.addProductImages(imageProduct);
                 }
+
             }
 
             product.setId(product0.getId());
@@ -225,11 +223,12 @@ public class ProductServiceImpl implements ProductService {
         List<ImageProduct> imageProductList = product.getListImage();
 
         for (ImageProduct image : imageProductList) {
-            File file = new File(root + "/" + image.getPath());
-            file.delete();
+            fileUploadCloudinary.deleteImage(image.getPath());
         }
         productRepo.deleteById(product.getId());
     }
+
+
 
     @Override
     public Product convertToProduct(ProductDto productDto) {
@@ -255,19 +254,7 @@ public class ProductServiceImpl implements ProductService {
         return productDto;
     }
 
-    public Resource load(String name) {
-        try {
-            Path file = root.resolve(name);
-            Resource resource = new UrlResource(file.toUri());
-            if (resource.exists()) {
-                return resource;
-            } else {
-                throw new RuntimeException("Could not read the file!!!");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error: " + e.getMessage());
-        }
-    }
+
 
     @Override
     public List<ProductDto> searchProductByName(String productName) {
