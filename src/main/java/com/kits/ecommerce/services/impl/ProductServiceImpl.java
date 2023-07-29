@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-    private final Path root = Paths.get("uploads");
 
     @Autowired
     ProductRepo productRepo;
