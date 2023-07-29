@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Random;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -29,7 +27,7 @@ public class PaymentPublicController {
         try {
 
 
-            Cart cart = (Cart)request.getSession().getAttribute("cart");
+            CartDto cart = (CartDto)request.getSession().getAttribute("cart");
             long current = System.currentTimeMillis();
 
 //            Random random = new Random();

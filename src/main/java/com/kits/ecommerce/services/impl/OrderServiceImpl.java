@@ -1,7 +1,7 @@
 package com.kits.ecommerce.services.impl;
 
-import com.kits.ecommerce.dtos.Cart;
-import com.kits.ecommerce.dtos.CartItem;
+import com.kits.ecommerce.dtos.CartDto;
+import com.kits.ecommerce.dtos.CartItemDto;
 import com.kits.ecommerce.dtos.OrderDto;
 import com.kits.ecommerce.dtos.ProductDto;
 import com.kits.ecommerce.entities.*;
@@ -11,8 +11,6 @@ import com.kits.ecommerce.services.OrderService;
 import com.kits.ecommerce.services.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -135,9 +133,9 @@ public class OrderServiceImpl implements OrderService {
             }
             order.setUser(user);
 
-            Cart cart = (Cart) httpSession.getAttribute("cart");
+            CartDto cart = (CartDto) httpSession.getAttribute("cart");
 
-            List<CartItem> cartItems = cart.getItemList();
+            List<CartItemDto> cartItems = cart.getItemList();
 
             double totalPrice = 0;
             for (int i = 0; i < cartItems.size(); i++) {
