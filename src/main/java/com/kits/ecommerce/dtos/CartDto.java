@@ -7,9 +7,12 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cart implements Serializable {
-    List<CartItem> itemList = new ArrayList<>();
+public class CartDto implements Serializable {
+    private Integer id;
+    private Integer userId;
+    private List<CartItemDto> itemList;
 }

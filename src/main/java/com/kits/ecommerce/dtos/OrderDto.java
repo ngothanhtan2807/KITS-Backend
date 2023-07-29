@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDto {
+public class OrderDto implements Serializable{
     private Integer id;
     private String code;
     private Double totalPrice;

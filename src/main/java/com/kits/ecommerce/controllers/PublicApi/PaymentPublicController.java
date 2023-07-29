@@ -1,6 +1,8 @@
 package com.kits.ecommerce.controllers.PublicApi;
 
 import com.kits.ecommerce.dtos.*;
+import com.kits.ecommerce.entities.Cart;
+import com.kits.ecommerce.services.CartService;
 import com.kits.ecommerce.services.OrderService;
 import com.kits.ecommerce.services.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Random;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -24,12 +24,15 @@ public class PaymentPublicController {
     @Autowired
     OrderService orderService;
 
+    @Autowired
+    CartService cartService;
+
     @PostMapping("/pay")
     public String pay(@RequestBody OrderDto orderDto, HttpServletRequest request) {
         try {
 
+            CartDto cart = cartService.getCart(orderDto.getUserID());
 
-            Cart cart = (Cart)request.getSession().getAttribute("cart");
             long current = System.currentTimeMillis();
 
 //            Random random = new Random();

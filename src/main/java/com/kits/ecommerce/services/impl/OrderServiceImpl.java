@@ -1,18 +1,17 @@
 package com.kits.ecommerce.services.impl;
 
-import com.kits.ecommerce.dtos.Cart;
-import com.kits.ecommerce.dtos.CartItem;
+import com.kits.ecommerce.dtos.CartDto;
+import com.kits.ecommerce.dtos.CartItemDto;
 import com.kits.ecommerce.dtos.OrderDto;
 import com.kits.ecommerce.dtos.ProductDto;
 import com.kits.ecommerce.entities.*;
 import com.kits.ecommerce.exeptions.ResoureNotFoundException;
 import com.kits.ecommerce.repositories.*;
+import com.kits.ecommerce.services.CartService;
 import com.kits.ecommerce.services.OrderService;
 import com.kits.ecommerce.services.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -52,6 +51,15 @@ public class OrderServiceImpl implements OrderService {
 
     @PersistenceContext
     protected EntityManager entityManager;
+
+    @Autowired
+    CartService cartService;
+
+    @Autowired
+    CartItemRepo cartItemRepo;
+
+    @Autowired
+    CartRepo cartRepo;
 
     @Override
     public OrderDto findOrderById(int orderID) {
@@ -135,9 +143,9 @@ public class OrderServiceImpl implements OrderService {
             }
             order.setUser(user);
 
-            Cart cart = (Cart) httpSession.getAttribute("cart");
+            CartDto cart = cartService.getCart(orderDto.getUserID());
 
-            List<CartItem> cartItems = cart.getItemList();
+            List<CartItemDto> cartItems = cart.getItemList();
 
             double totalPrice = 0;
             for (int i = 0; i < cartItems.size(); i++) {
@@ -159,8 +167,15 @@ public class OrderServiceImpl implements OrderService {
             order.setTotalPrice(totalPrice);
             order.setStatus(false);
             orderRepo.save(order);
-            httpSession.setAttribute("cart", null);
-            httpSession.setAttribute("order", null);
+
+            Cart cart1 = cartService.convertToCart(cart);
+            List<CartItem> cartItems1 = cart1.getItemList();
+            for (int i = 0; i < cartItems1.size(); i++) {
+                cartItems1.get(i).setCart(null);
+                cartItemRepo.delete(cartItems1.get(i));
+            }
+            cartRepo.delete(cart1);
+
         } catch (Exception e) {
             throw e;
         }
@@ -178,22 +193,23 @@ public class OrderServiceImpl implements OrderService {
 
         return orderDto;
     }
-@Override
-    public List<ProductDto> hotSaler(){
+
+    @Override
+    public List<ProductDto> hotSaler() {
         String sql = "SELECT product_id\n" +
                 "from order_product\n" +
                 "GROUP BY product_id ORDER BY sum(quantity) DESC LIMIT 5 ";
-    Query query = entityManager.createNativeQuery(sql);
-    List list = query.getResultList();
+        Query query = entityManager.createNativeQuery(sql);
+        List list = query.getResultList();
 
-    List<ProductDto>productDtos = new ArrayList<>();
-        List<Product>products = new ArrayList<>();
-    for (int i = 0; i < list.size(); i++) {
-        int finalI = i;
-        Product product = productRepo.findById(((Integer) list.get(i))).orElseThrow(()->new ResoureNotFoundException("Product", "ID", ((Integer) list.get(finalI))));
-        productDtos.add(productService.convertToProductDto(product));
+        List<ProductDto> productDtos = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            int finalI = i;
+            Product product = productRepo.findById(((Integer) list.get(i))).orElseThrow(() -> new ResoureNotFoundException("Product", "ID", ((Integer) list.get(finalI))));
+            productDtos.add(productService.convertToProductDto(product));
+        }
+
+        return productDtos;
     }
-
-    return productDtos;
-}
 }

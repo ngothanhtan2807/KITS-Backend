@@ -1,23 +1,17 @@
 package com.kits.ecommerce.controllers.PublicApi;
 
 
-import com.kits.ecommerce.dtos.Cart;
-import com.kits.ecommerce.dtos.CartItem;
 import com.kits.ecommerce.dtos.ProductDto;
 import com.kits.ecommerce.dtos.WishList;
-import com.kits.ecommerce.entities.Color;
 import com.kits.ecommerce.entities.Product;
-import com.kits.ecommerce.entities.Size;
 import com.kits.ecommerce.exeptions.ResoureNotFoundException;
 import com.kits.ecommerce.repositories.ProductRepo;
 import com.kits.ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 

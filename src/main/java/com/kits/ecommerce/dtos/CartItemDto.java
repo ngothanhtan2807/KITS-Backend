@@ -1,16 +1,20 @@
 package com.kits.ecommerce.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartItem implements Serializable {
-    static final long serialVersionUID = 2915399222309278762l;
+public class CartItemDto implements Serializable {
+//    static final long serialVersionUID = 2915399222309278762l;
+    private Integer id;
     private int productID;
     private String productName;
     private String image;
@@ -21,5 +25,6 @@ public class CartItem implements Serializable {
     private int quantity;
     private double price;
     private Double totalPrice;
+
 
 }
