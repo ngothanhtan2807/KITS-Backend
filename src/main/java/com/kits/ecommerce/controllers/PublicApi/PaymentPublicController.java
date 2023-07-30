@@ -30,7 +30,7 @@ public class PaymentPublicController {
     @PostMapping("/pay")
     public String pay(@RequestBody OrderDto orderDto, HttpServletRequest request) {
         try {
-
+//luu orderDto vao localStore
             CartDto cart = cartService.getCart(orderDto.getUserID());
 
             long current = System.currentTimeMillis();
@@ -39,8 +39,8 @@ public class PaymentPublicController {
 //            long randomNumber = random.nextInt(90000) + 10000; // tạo số ngẫu nhiên từ 10000 đến 99999
             orderDto.setVnp_TxnRef(current);
             orderDto.setCode("ORDER-"+current);
-            orderDto.setVnp_OrderInfo("thanh toan hoa don ORDER-"+current);
-            request.getSession().setAttribute("order", orderDto);
+            orderDto.setVnp_OrderInfo(orderDto.getCode());
+
            double price = 0;
             for (int i = 0; i < cart.getItemList().size(); i++) {
                 price+= cart.getItemList().get(i).getTotalPrice();
@@ -66,17 +66,24 @@ public class PaymentPublicController {
     }
     @PostMapping("/submit-order")
     public ResponseEntity<?>submit(@RequestBody SubmitOrderDto result, HttpServletRequest request, HttpSession httpSession){
-        OrderDto orderDto = (OrderDto) request.getSession().getAttribute("order");
+        OrderDto orderDto = result.getOrderDto();
         String[] out = result.getString().split("&");
         for (int i = 0; i < out.length; i++) {
+
+            if(out[i].startsWith("vnp_OrderInfo")){
+                String[]code = out[i].split("=");
+                orderDto.setCode(code[1]);
+            }
             if(out[i].startsWith("vnp_ResponseCode")){
                 String[]code = out[i].split("=");
                 if(code[1].equals("00")){
                     System.out.println("--------------code: "+ code[1]);
                     orderDto.setType(1);
+
                     orderService.saveOrderService(orderDto, httpSession);
                 }
             }
+
         }
 
 
