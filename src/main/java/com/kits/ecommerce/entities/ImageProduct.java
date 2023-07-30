@@ -24,7 +24,8 @@ public class ImageProduct extends  TimeAuditable{
 
     private  String path;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id") // tên field khoá ngoại
+    @JsonIgnore
     private Product product;
 }
