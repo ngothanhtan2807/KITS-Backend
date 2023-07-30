@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 public class SubmitOrderDto {
 
     private  String string;
+
+    private OrderDto orderDto;
 }
