@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public class Product extends TimeAuditable {
 
     private int totalQuantity;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product"/* tên property product trong class ProductImages */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", fetch = FetchType.LAZY/* tên property product trong class ProductImages */
             /*, fetch = FetchType.EAGER, orphanRemoval = true*/)
     private List<ImageProduct> listImage;
 
@@ -49,6 +50,10 @@ public class Product extends TimeAuditable {
     @JoinTable(name = "product_color", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "color_id"))
     private Set<Color> colors;
 
+
+//    @ManyToMany(mappedBy = "product", cascade = CascadeType.DETACH,fetch = FetchType.LAZY)
+//    @JsonIgnore
+//    private List<WishList> wishLists;
 
     public void addProductImages(ImageProduct productImages1) {
         productImages1.setProduct(this);
