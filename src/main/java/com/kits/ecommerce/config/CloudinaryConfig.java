@@ -9,9 +9,9 @@ import java.util.Map;
 
 @Configuration
 public class CloudinaryConfig {
-    private final String CLOUD_NAME = "dinaczft5";
-    private final String API_KEY = "988819678585623";
-    private final String API_SECRET = "7pNZeNLXjW6eMw_j6s0Mz1wUIiE";
+    private final String CLOUD_NAME = "dcl6nhka6";
+    private final String API_KEY = "624214143147832";
+    private final String API_SECRET = "lzydupskFB7lHJ05A6AM3l0RGW4";
     @Bean
     public Cloudinary cloudinary(){
         Map<String, String> config = new HashMap<>();
