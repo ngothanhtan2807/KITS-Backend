@@ -5,18 +5,20 @@ import com.kits.ecommerce.entities.Cart;
 import com.kits.ecommerce.services.CartService;
 import com.kits.ecommerce.services.OrderService;
 import com.kits.ecommerce.services.PaymentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequestMapping("/api/payment")
 @CrossOrigin
+@Tag(name = "Payment")
 public class PaymentPublicController {
     @Autowired
     PaymentService paymentService;

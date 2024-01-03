@@ -3,7 +3,7 @@ package com.kits.ecommerce.dtos;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Id;
+import jakarta.persistence.Id;
 
 
 

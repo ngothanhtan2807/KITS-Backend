@@ -4,6 +4,7 @@ import com.kits.ecommerce.dtos.*;
 import com.kits.ecommerce.services.UserService;
 import com.kits.ecommerce.services.impl.JwtTokenService;
 import com.kits.ecommerce.utils.CookieUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,15 +19,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.security.Principal;
-
-//su dung http://localhost:8080/swagger-ui/index.html  de xem api doc
 
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin
+@Tag(name = "Auth")
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
@@ -44,7 +44,7 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/me")
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
 
     public ResponseEntity<ResponseFetchMe> me(Principal p) {
         String username = p.getName();

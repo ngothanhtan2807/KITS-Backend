@@ -3,7 +3,7 @@ package com.kits.ecommerce.controllers.PublicApi;
 import com.kits.ecommerce.config.AppConstants;
 import com.kits.ecommerce.dtos.*;
 import com.kits.ecommerce.services.ProductService;
-import org.hibernate.engine.jdbc.StreamUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,9 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -23,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/public/")
 @CrossOrigin
+@Tag(name = "Product")
 public class ProductPublicController {
     @Autowired
     private ProductService productService;

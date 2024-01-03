@@ -3,7 +3,7 @@ package com.kits.ecommerce.services;
 import com.kits.ecommerce.dtos.OrderDto;
 import com.kits.ecommerce.dtos.PaymentDto;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
 public interface PaymentService {

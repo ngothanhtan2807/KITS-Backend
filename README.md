@@ -1,2 +1,3 @@
 # KITS_BACKEND_SBCS_GROUP2
 Pull code checkout -b feature/... 
+Swagger UI: http://localhost:9999/swagger-ui/index.html

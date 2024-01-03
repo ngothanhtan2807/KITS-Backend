@@ -12,20 +12,22 @@ import com.kits.ecommerce.services.CartService;
 import com.kits.ecommerce.services.ColorService;
 import com.kits.ecommerce.services.ProductService;
 import com.kits.ecommerce.services.SizeService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/public/cart")
 @CrossOrigin
+@Tag(name = "Cart")
 public class CartPublicController {
 
     @Autowired

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Data

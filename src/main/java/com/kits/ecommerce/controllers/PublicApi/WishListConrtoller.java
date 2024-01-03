@@ -8,17 +8,19 @@ import com.kits.ecommerce.exeptions.ResoureNotFoundException;
 import com.kits.ecommerce.repositories.ProductRepo;
 import com.kits.ecommerce.services.ProductService;
 import com.kits.ecommerce.services.WishListService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/public/wish-list")
 @CrossOrigin
+@Tag(name = "Wish List")
 public class WishListConrtoller {
    @Autowired
     WishListService wishListService;

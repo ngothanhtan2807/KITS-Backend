@@ -4,7 +4,7 @@ import com.kits.ecommerce.dtos.OrderDto;
 import com.kits.ecommerce.dtos.ProductDto;
 import com.kits.ecommerce.entities.Order;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 public interface OrderService {

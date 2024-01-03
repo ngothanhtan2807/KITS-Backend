@@ -13,11 +13,13 @@ import com.kits.ecommerce.services.SizeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class CartServiceImpl implements CartService {
 
     @Autowired
@@ -44,14 +46,17 @@ public class CartServiceImpl implements CartService {
     SizeService sizeService;
     @Autowired
     ProductService productService;
+    @Autowired
+    UserRepo userRepo;
 
     @Override
     public CartDto getCart(Integer userID) {
 
-        Cart cart = cartRepo.findCartByUserId(userID);
+        Cart cart = cartRepo.findCartByUserID(userID);
         if (cart == null) {
+            var user = userRepo.findById(userID).orElseThrow(() -> new ResoureNotFoundException("User", "Id", userID));
             cart = new Cart();
-            cart.setUserId(userID);
+            cart.setUser(user);
             cart.setItemList(new ArrayList<>());
         }
         return convertToCartDto(cart);
@@ -59,13 +64,14 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDto addToCart(Integer userID, CartItemDto cartItemDto) {
-        Cart cart = cartRepo.findCartByUserId(userID);
+        Cart cart = cartRepo.findCartByUserID(userID);
         if (cart == null) {
+            var user = userRepo.findById(userID).orElseThrow(() -> new ResoureNotFoundException("User", "Id", userID));
             cart = new Cart();
-            cart.setUserId(userID);
+            cart.setUser(user);
             cart.setItemList(new ArrayList<>());
         }
-        System.out.println("____________"+cart.getId());
+        System.out.println("____________" + cart.getId());
 //        CartDto cartDto = convertToCartDto(cart);
 //        List<CartItemDto> itemList = cartDto.getItemList();
 
@@ -75,7 +81,7 @@ public class CartServiceImpl implements CartService {
         Color color = colorRepo.findById(cartItemDto.getColorID()).orElseThrow(() -> new ResoureNotFoundException("Color", "ID", cartItemDto.getColorID()));
         Size size = sizeRepo.findById(cartItemDto.getSizeID()).orElseThrow(() -> new ResoureNotFoundException("Size", "ID", cartItemDto.getSizeID()));
 
-List<CartItem>cartItems = cart.getItemList();
+        List<CartItem> cartItems = cart.getItemList();
 
 
         int count = 0;
@@ -101,7 +107,7 @@ List<CartItem>cartItems = cart.getItemList();
             cartItemDto.setProductName(productDto.getName());
             cartItemDto.setPrice(productDto.getPrice());
             cartItemDto.setImage(productDto.getListImage().get(0).getTitle());
-CartItem cartItem = convertToCartItem(cartItemDto);
+            CartItem cartItem = convertToCartItem(cartItemDto);
             cartItem.setCart(cart);
             cartItems.add(cartItem);
         }
@@ -117,12 +123,12 @@ CartItem cartItem = convertToCartItem(cartItemDto);
     @Override
     public void deleteCartItem(int userID, int id, int sizeID, int colorID) {
 
-        Cart cart = cartRepo.findCartByUserId(userID);
+        Cart cart = cartRepo.findCartByUserID(userID);
         List<CartItem> cartItems = cart.getItemList();
         for (int i = 0; i < cartItems.size(); i++) {
             if (cartItems.get(i).getProductID() == id && cartItems.get(i).getSizeID() == sizeID && cartItems.get(i).getColorID() == colorID) {
-               cartItems.get(i).setCart(null);
-               cartItemRepo.delete(cartItems.get(i));
+                cartItems.get(i).setCart(null);
+                cartItemRepo.delete(cartItems.get(i));
                 cartItems.remove(i);
 
             }
@@ -133,15 +139,15 @@ CartItem cartItem = convertToCartItem(cartItemDto);
 
     @Override
     public CartItemDto updateCartItem(int userID, int itemID, CartItemDto cartItemDto) {
-        Cart cart = cartRepo.findCartByUserId(userID);
+        Cart cart = cartRepo.findCartByUserID(userID);
 
         List<CartItem> cartItems = cart.getItemList();
         Product product = productRepo.findById(cartItemDto.getProductID()).orElseThrow(() -> new ResoureNotFoundException("Product", "ID", cartItemDto.getProductID()));
         ProductDto productDto = productService.convertToProductDto(product);
-CartItem cartItem = null;
+        CartItem cartItem = null;
         for (CartItem item : cartItems) {
 
-            if ((item.getId()==itemID) && (item.getProductID() == cartItemDto.getProductID()) && (item.getColorID() == cartItemDto.getColorID()) && (item.getSizeID() == cartItemDto.getSizeID())) {
+            if ((item.getId() == itemID) && (item.getProductID() == cartItemDto.getProductID()) && (item.getColorID() == cartItemDto.getColorID()) && (item.getSizeID() == cartItemDto.getSizeID())) {
 
                 item.setQuantity(cartItemDto.getQuantity());
 
@@ -149,7 +155,7 @@ CartItem cartItem = null;
                     item.setQuantity(productDto.getTotalQuantity());
                 }
                 item.setTotalPrice(cartItemDto.getPrice() * cartItemDto.getQuantity());
-            cartItem = item;
+                cartItem = item;
             } else {
                 continue;
             }
@@ -163,8 +169,8 @@ CartItem cartItem = null;
 
     @Override
     public void deleteCart(int userID) {
-        Cart cart = cartRepo.findCartByUserId(userID);
-        List<CartItem>cartItems = cart.getItemList();
+        Cart cart = cartRepo.findCartByUserID(userID);
+        List<CartItem> cartItems = cart.getItemList();
         for (int i = 0; i < cartItems.size(); i++) {
             cartItems.get(i).setCart(null);
             cartItemRepo.delete(cartItems.get(i));
@@ -175,7 +181,7 @@ CartItem cartItem = null;
 
     @Override
     public int countItem(int userID) {
-        Cart cart = cartRepo.findCartByUserId(userID);
+        Cart cart = cartRepo.findCartByUserID(userID);
         CartDto cartDto = convertToCartDto(cart);
 
         int count = cartDto.getItemList().size();
@@ -187,7 +193,7 @@ CartItem cartItem = null;
     public double totalPrice(int userID) {
 
         double total = 0;
-        Cart cart = cartRepo.findCartByUserId(userID);
+        Cart cart = cartRepo.findCartByUserID(userID);
         CartDto cartDto = convertToCartDto(cart);
 
         List<CartItemDto> cartItems = cartDto.getItemList();
@@ -202,9 +208,10 @@ CartItem cartItem = null;
 
     @Override
     public CartDto convertToCartDto(Cart cart) {
+
         CartDto cartDto = new CartDto();
         cartDto.setId(cart.getId());
-        cartDto.setUserId(cart.getUserId());
+        cartDto.setUserId(cart.getUser().getUserId());
         List<CartItem> cartItems = cart.getItemList();
 
         List<CartItemDto> cartItemDtos = new ArrayList<>();
@@ -218,7 +225,9 @@ CartItem cartItem = null;
     @Override
     public Cart convertToCart(CartDto cartDto) {
         Cart cart = new Cart();
-        cart.setUserId(cartDto.getUserId());
+        var user = userRepo.findById(cartDto.getUserId()).orElseThrow(() -> new ResoureNotFoundException("User", "Id", cartDto.getUserId()));
+
+        cart.setUser(user);
         List<CartItemDto> cartItemDtos = cartDto.getItemList();
 
         List<CartItem> cartItems = new ArrayList<>();

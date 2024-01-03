@@ -6,19 +6,21 @@ import com.kits.ecommerce.dtos.ResponseDTO;
 import com.kits.ecommerce.dtos.UserDto;
 import com.kits.ecommerce.services.FileUploadCloudinary;
 import com.kits.ecommerce.services.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/public")
 @CrossOrigin
+@Tag(name = "User")
 public class UserPublicController {
     @Autowired
     private UserService userService;
