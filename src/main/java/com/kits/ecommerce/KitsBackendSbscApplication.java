@@ -26,7 +26,7 @@ import java.util.List;
 @SpringBootApplication
 @EnableJpaAuditing //Phải thêm vào mới gen ngày
 @Slf4j
-public class KitsBackendSbscApplication implements CommandLineRunner{
+public class KitsBackendSbscApplication/* implements CommandLineRunner*/{
 
     @Autowired
     private RoleRepo roleRepo;
@@ -47,7 +47,7 @@ public class KitsBackendSbscApplication implements CommandLineRunner{
 
 
 
-    @Override
+    /*@Override
     public void run(String... args) throws Exception {
         log.info("BEGIN INSERT ROLE DUMP");
         try {
@@ -81,5 +81,5 @@ public class KitsBackendSbscApplication implements CommandLineRunner{
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

@@ -54,7 +54,7 @@ public class SecurityConfig {
         http.authorizeRequests()
 //                .antMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN")
                 .antMatchers("/api/auth/**").permitAll()
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
 
                 .and().csrf().disable()
 
